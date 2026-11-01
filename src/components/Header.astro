@@ -1,0 +1,212 @@
+---
+import { site, whatsappUrl } from '../config';
+const wa = whatsappUrl();
+const path = Astro.url.pathname;
+const links = [
+  { href: '/', label: 'Início' },
+  { href: '/sobre/', label: 'Sobre' },
+  { href: '/servicos/', label: 'Serviços' },
+  { href: '/contato/', label: 'Contato' },
+];
+function active(href: string) {
+  if (href === '/') return path === '/' || path === '';
+  return path.startsWith(href);
+}
+---
+
+<header class="site-header" data-header transition:persist="header">
+  <div class="container site-header__inner">
+    <a class="brand" href="/" aria-label={`${site.name} Fisioterapeuta CREFITO ${site.crefito} — início`}>
+      <span class="brand__logo" aria-hidden="true">
+        <img src="/brand/logo-emblem.svg" width="40" height="40" alt="" />
+      </span>
+      <span class="brand__text">
+        <strong>{site.name}</strong>
+        <span>Fisioterapeuta · CREFITO {site.crefito}</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Principal">
+      <ul class="nav__list">
+        {links.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              class:list={[{ 'is-active': active(l.href) }]}
+              data-scramble
+              data-label={l.label}
+            >{l.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <a class="btn btn--wa btn--magnetic site-header__cta" href={wa} data-wa-cta>
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+        <path d="M20.5 3.5A11 11 0 0 0 3.1 17.7L2 22l4.4-1.1A11 11 0 1 0 20.5 3.5zm-8.5 17a9 9 0 0 1-4.6-1.3l-.3-.2-2.6.7.7-2.5-.2-.3A9 9 0 1 1 12 20.5zm5-6.7c-.3-.1-1.6-.8-1.8-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-1.9c-.2-.3 0-.4.1-.6l.4-.5.1-.3c0-.1 0-.3-.1-.4s-.6-1.4-.8-1.9-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3a2 2 0 0 0-.6 1.5 3.5 3.5 0 0 0 .7 1.8c.1.2 1.4 2.2 3.4 3.1 2 .9 2 .6 2.4.6s1.2-.1 1.4-.3.9-1 1-1.2.2-.3.1-.5-.2-.2-.5-.3z"/>
+      </svg>
+      WhatsApp
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-overlay" aria-label="Abrir menu" data-nav-toggle>
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div id="nav-overlay" class="nav-overlay" data-nav-overlay hidden>
+  <div class="nav-overlay__bg" aria-hidden="true"></div>
+  <nav class="nav-overlay__panel" aria-label="Menu">
+    <button type="button" class="nav-overlay__close" data-nav-close aria-label="Fechar menu">Fechar</button>
+    <ul class="nav-overlay__list">
+      {links.map((l, i) => (
+        <li style={`--i:${i}`}>
+          <a href={l.href} class:list={[{ 'is-active': active(l.href) }]} data-nav-link>{l.label}</a>
+        </li>
+      ))}
+    </ul>
+    <a class="btn btn--wa" href={wa} data-wa-cta data-nav-link>Falar no WhatsApp</a>
+  </nav>
+</div>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(14px);
+    background: rgba(250, 247, 242, 0.86);
+    border-bottom: 1px solid var(--line);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 4.25rem;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+    margin-right: auto;
+  }
+  .brand__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+  .brand__text strong {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--graphite-950);
+  }
+  .brand__text span {
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+  }
+  .nav__list {
+    display: flex;
+    gap: 0.15rem;
+  }
+  .nav__list a {
+    display: block;
+    padding: 0.55rem 0.7rem;
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-weight: 500;
+    font-size: 0.95rem;
+    border-radius: var(--radius-sm);
+  }
+  .nav__list a:hover,
+  .nav__list a.is-active {
+    color: var(--graphite-950);
+    background: var(--rose-100);
+  }
+  .site-header__cta {
+    min-height: 2.6rem;
+    padding-inline: 1.1rem;
+    font-size: 0.95rem;
+  }
+  .nav-toggle {
+    display: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    background: var(--paper);
+    padding: 0;
+    cursor: pointer;
+  }
+  .nav-toggle span {
+    display: block;
+    width: 1rem;
+    height: 1.5px;
+    margin: 0.28rem auto;
+    background: var(--graphite-900);
+  }
+  .nav-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+  }
+  .nav-overlay[hidden] { display: none !important; }
+  .nav-overlay__bg {
+    position: absolute;
+    inset: 0;
+    background: rgba(46, 47, 49, 0.55);
+    backdrop-filter: blur(8px);
+  }
+  .nav-overlay__panel {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: min(100%, 22rem);
+    background: var(--cream);
+    padding: 1.5rem 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    transform: translateX(100%);
+  }
+  .nav-overlay.is-open .nav-overlay__panel {
+    transform: none;
+  }
+  .nav-overlay__close {
+    align-self: flex-end;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    color: var(--rose-deep);
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .nav-overlay__list {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .nav-overlay__list a {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+    text-decoration: none;
+    color: var(--graphite-950);
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  .nav-overlay.is-open .nav-overlay__list a {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.45s var(--ease), transform 0.45s var(--ease);
+    transition-delay: calc(var(--i, 0) * 60ms + 80ms);
+  }
+  .nav-overlay__list a.is-active { color: var(--rose-dark); }
+  @media (max-width: 900px) {
+    .nav, .site-header__cta { display: none; }
+    .nav-toggle { display: inline-grid; place-items: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-overlay__panel { transition: none; }
+    .nav-overlay__list a { opacity: 1; transform: none; transition: none; }
+  }
+</style>

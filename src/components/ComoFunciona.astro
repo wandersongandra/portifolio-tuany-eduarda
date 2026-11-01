@@ -1,0 +1,214 @@
+---
+const steps = [
+  {
+    n: '01',
+    title: 'Primeiro contato',
+    text: 'Você fala pelo WhatsApp ou Instagram, conta o motivo do cuidado e a disponibilidade de horários.',
+  },
+  {
+    n: '02',
+    title: 'Avaliação no domicílio',
+    text: 'A fisioterapeuta vai até você, realiza a avaliação e conversa sobre objetivos e condições de saúde.',
+  },
+  {
+    n: '03',
+    title: 'Plano de cuidado',
+    text: 'Com base na avaliação, é definido um plano individualizado — frequência e condutas alinhadas ao caso.',
+  },
+  {
+    n: '04',
+    title: 'Acompanhamento',
+    text: 'As sessões seguem no domicílio, com orientações para a rotina e ajustes conforme a evolução.',
+  },
+];
+---
+
+<section class="section como" id="como-funciona" aria-labelledby="como-title" data-bg="sage">
+  <div class="container como__intro">
+    <header class="section__header reveal">
+      <p class="eyebrow">Como funciona</p>
+      <h2 class="section__title split-headline" id="como-title" data-split>
+        Atendimento em casa, passo a passo
+      </h2>
+      <p class="section__lead">
+        Um fluxo simples para quem busca fisioterapia domiciliar em Belo Horizonte.
+      </p>
+    </header>
+  </div>
+
+  <div class="como-pin" data-como-pin>
+    <div class="como-pin__viewport">
+      <ol class="como-pin__track" data-como-track>
+        {steps.map((step) => (
+          <li class="como-panel" data-step>
+            <span class="como-panel__n" aria-hidden="true">{step.n}</span>
+            <h3>{step.title}</h3>
+            <p>{step.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="como-pin__progress" aria-hidden="true">
+      <span data-como-progress></span>
+    </div>
+  </div>
+
+  <!-- Mobile / reduced-motion friendly grid (shown via CSS when pin is disabled) -->
+  <div class="container como-grid">
+    <ol class="steps" data-stagger>
+      {steps.map((step) => (
+        <li class="steps__item" data-step>
+          <span class="steps__n" aria-hidden="true">{step.n}</span>
+          <div>
+            <h3>{step.title}</h3>
+            <p>{step.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .como {
+    position: relative;
+  }
+
+  .como-pin {
+    display: none;
+  }
+
+  .como-grid {
+    display: block;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+
+  .steps__item {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    min-height: 100%;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .steps__n,
+  .como-panel__n {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--rose-deep);
+    margin-bottom: var(--space-3);
+  }
+
+  .steps__item h3,
+  .como-panel h3 {
+    font-size: var(--fs-h3);
+    margin-bottom: var(--space-2);
+  }
+
+  .steps__item p,
+  .como-panel p {
+    color: var(--ink-soft);
+    font-size: var(--fs-small);
+  }
+
+  @media (max-width: 960px) {
+    .steps {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .steps {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Desktop pin layout — activated by .has-pin on html/body via JS */
+  :global(html.has-como-pin) .como-pin {
+    display: block;
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  :global(html.has-como-pin) .como-grid {
+    display: none;
+  }
+
+  :global(html.has-como-pin) .como-pin__viewport {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding-inline: var(--gutter);
+  }
+
+  :global(html.has-como-pin) .como-pin__track {
+    display: flex;
+    gap: 1.5rem;
+    will-change: transform;
+  }
+
+  :global(html.has-como-pin) .como-panel {
+    flex: 0 0 min(28rem, 72vw);
+    min-height: 22rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    box-shadow: var(--shadow-lift);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  :global(html.has-como-pin) .como-panel__n {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--rose-deep);
+    margin-bottom: auto;
+  }
+
+  :global(html.has-como-pin) .como-panel h3 {
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+  }
+
+  :global(html.has-como-pin) .como-panel p {
+    font-size: 1.05rem;
+    max-width: 28ch;
+  }
+
+  :global(html.has-como-pin) .como-pin__progress {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: 2rem;
+    height: 2px;
+    background: rgba(30, 46, 36, 0.12);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  :global(html.has-como-pin) .como-pin__progress span {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: var(--rose-deep);
+    transform-origin: left center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.has-como-pin) .como-pin {
+      display: none !important;
+    }
+    :global(html.has-como-pin) .como-grid {
+      display: block !important;
+    }
+  }
+</style>

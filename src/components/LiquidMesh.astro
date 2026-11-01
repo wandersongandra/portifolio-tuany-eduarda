@@ -1,0 +1,18 @@
+---
+---
+<canvas class="liquid-mesh" data-liquid-mesh aria-hidden="true"></canvas>
+<style>
+  .liquid-mesh {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.9;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .liquid-mesh { display: none; }
+  }
+</style>

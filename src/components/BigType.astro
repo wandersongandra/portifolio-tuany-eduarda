@@ -1,0 +1,68 @@
+---
+---
+<section class="big-type" data-big-type aria-label="Destaque">
+  <div class="big-type__sticky">
+    <p class="big-type__eyebrow">Presença que acompanha</p>
+    <h2 class="big-type__line" data-big-fill aria-hidden="true">
+      <span class="big-type__outline">Cuidado que vai até você</span>
+      <span class="big-type__fill">Cuidado que vai até você</span>
+    </h2>
+    <p class="sr-only">Cuidado que vai até você</p>
+  </div>
+</section>
+
+<style>
+  .big-type {
+    position: relative;
+    height: 160vh;
+    background: var(--graphite-950);
+    color: var(--cream);
+  }
+  .big-type__sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    padding: var(--gutter);
+    overflow: hidden;
+  }
+  .big-type__eyebrow {
+    font-size: var(--fs-eyebrow);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 1.25rem;
+    font-weight: 600;
+  }
+  .big-type__line {
+    position: relative;
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 8vw, 5.5rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin: 0;
+  }
+  .big-type__outline,
+  .big-type__fill {
+    display: block;
+  }
+  .big-type__outline {
+    color: transparent;
+    -webkit-text-stroke: 1.25px rgba(235, 229, 223, 0.55);
+  }
+  .big-type__fill {
+    position: absolute;
+    inset: 0;
+    color: var(--cream);
+    clip-path: inset(0 100% 0 0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .big-type { height: auto; }
+    .big-type__sticky { position: relative; height: auto; padding-block: 4rem; }
+    .big-type__fill { clip-path: none; }
+    .big-type__outline { display: none; }
+  }
+</style>

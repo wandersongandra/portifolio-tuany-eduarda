@@ -1,0 +1,114 @@
+---
+import { site } from '../config';
+---
+
+<div class="preloader" data-preloader aria-hidden="true">
+  <div class="preloader__inner">
+    <div class="preloader__logo" data-preloader-logo>
+      <div class="preloader__orb">
+        <div class="preloader__emblem-mask" data-preloader-mask>
+          <img class="preloader__emblem" src="/brand/logo-emblem.svg" width="280" height="280" alt="" />
+        </div>
+        <div class="preloader__ring" data-preloader-ring>
+          <img src="/brand/logo-text-ring.svg" width="280" height="280" alt="" />
+        </div>
+      </div>
+    </div>
+    <p class="preloader__name">
+      <span class="preloader__mask"><span class="preloader__line">{site.name.split(' ')[0]}</span></span>
+      <span class="preloader__mask"><span class="preloader__line">{site.name.split(' ').slice(1).join(' ')}</span></span>
+    </p>
+    <p class="preloader__mark">FISIOTERAPEUTA · CREFITO {site.crefito}</p>
+    <div class="preloader__bar" aria-hidden="true"><span></span></div>
+  </div>
+  <div class="preloader__wipe" aria-hidden="true"></div>
+</div>
+
+<style>
+  .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-items: center;
+    background: #58595B;
+    color: #EBE5DF;
+    overflow: hidden;
+  }
+  .preloader.is-done { pointer-events: none; }
+  .preloader__inner { text-align: center; position: relative; z-index: 2; }
+  .preloader__logo {
+    width: min(14rem, 58vw);
+    height: min(14rem, 58vw);
+    margin: 0 auto 1.5rem;
+  }
+  .preloader__orb {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #58595B;
+  }
+  .preloader__emblem-mask {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    clip-path: circle(0% at 50% 50%);
+  }
+  .preloader__emblem,
+  .preloader__ring img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .preloader__ring {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: rotate(-40deg) scale(0.92);
+  }
+  .preloader__name {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 6vw, 3.8rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0 0 0.75rem;
+    color: #F7F3EE;
+  }
+  .preloader__mask { display: block; overflow: hidden; }
+  .preloader__line { display: block; transform: translate3d(0, 110%, 0); }
+  .preloader__mark {
+    font-size: 0.8rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #E8C6C0;
+    opacity: 0;
+  }
+  .preloader__bar {
+    width: min(11rem, 40vw);
+    height: 2px;
+    margin: 1.5rem auto 0;
+    background: rgba(235, 229, 223, 0.15);
+    border-radius: 99px;
+    overflow: hidden;
+    opacity: 0;
+  }
+  .preloader__bar span {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: #C9978F;
+  }
+  .preloader__wipe {
+    position: absolute;
+    inset: 0;
+    background: #F7F3EE;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    z-index: 3;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .preloader { display: none !important; }
+  }
+</style>

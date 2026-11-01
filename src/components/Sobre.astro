@@ -1,0 +1,158 @@
+---
+import { site } from '../config';
+---
+
+<section class="section" id="sobre" aria-labelledby="sobre-title">
+  <div class="container sobre">
+    <div class="sobre__copy reveal">
+      <p class="eyebrow">Sobre a profissional</p>
+      <h2 class="section__title split-headline" id="sobre-title" data-split>Cuidado próximo, formação sólida</h2>
+      <p class="section__lead">
+        {site.name} é fisioterapeuta registrada no CREFITO {site.crefito},
+        com pós-graduação em Geriatria e Gerontologia. Atua com atendimento
+        domiciliar em Belo Horizonte, acompanhando pessoas que precisam de
+        reabilitação e cuidado no conforto de casa.
+      </p>
+      <p class="sobre__text">
+        A prática combina atenção à mobilidade e autonomia de idosos com
+        abordagens voltadas à disfunção temporomandibular (DTM) e à dor
+        orofacial (DOF). Cada plano de cuidado é individualizado após avaliação.
+      </p>
+      <dl class="sobre__creds">
+        <div>
+          <dt>Registro profissional</dt>
+          <dd>CREFITO {site.crefito}</dd>
+        </div>
+        <div>
+          <dt>Formação complementar</dt>
+          <dd>Pós-graduação em Geriatria e Gerontologia</dd>
+        </div>
+        <div>
+          <dt>Modalidade</dt>
+          <dd>Atendimento domiciliar em {site.city}</dd>
+        </div>
+      </dl>
+    </div>
+
+    <aside class="sobre__panel reveal clip-reveal" aria-label="Resumo profissional">
+      <div class="sobre__panel-inner">
+        <p class="sobre__panel-label">Em destaque</p>
+        <ul>
+          <li>
+            <strong>Fisioterapia em idosos</strong>
+            <span>Equilíbrio, mobilidade e prevenção de quedas</span>
+          </li>
+          <li>
+            <strong>Atendimento em casa</strong>
+            <span>Conforto e continuidade no dia a dia</span>
+          </li>
+          <li>
+            <strong>DTM e DOF</strong>
+            <span>Cuidado voltado à articulação e dor orofacial</span>
+          </li>
+        </ul>
+        <p class="sobre__note">
+          Atendimento com escuta, presença e plano de cuidado feito sob medida
+          para a sua rotina em Belo Horizonte.
+        </p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .sobre {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    align-items: start;
+  }
+
+  .sobre__text {
+    margin-top: var(--space-4);
+    color: var(--ink-soft);
+    max-width: 38rem;
+  }
+
+  .sobre__creds {
+    display: grid;
+    gap: 1rem;
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--line);
+  }
+
+  .sobre__creds dt {
+    font-size: var(--fs-eyebrow);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rose-deep);
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+  }
+
+  .sobre__creds dd {
+    margin: 0;
+    font-weight: 550;
+    color: var(--graphite-950);
+  }
+
+  .sobre__panel-inner {
+    background: var(--graphite-900);
+    color: var(--rose-100);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .sobre__panel-label {
+    font-size: var(--fs-eyebrow);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rose-soft);
+    font-weight: 600;
+    margin-bottom: var(--space-5);
+  }
+
+  .sobre__panel ul {
+    display: grid;
+    gap: 1.15rem;
+  }
+
+  .sobre__panel li {
+    display: grid;
+    gap: 0.2rem;
+    padding-bottom: 1.15rem;
+    border-bottom: 1px solid rgba(232, 240, 234, 0.12);
+  }
+
+  .sobre__panel li:last-of-type {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .sobre__panel strong {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: #fff;
+    font-weight: 550;
+  }
+
+  .sobre__panel span {
+    color: var(--rose-soft);
+    font-size: var(--fs-small);
+  }
+
+  .sobre__note {
+    margin-top: var(--space-5);
+    font-size: 0.82rem;
+    color: var(--rose-soft);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 900px) {
+    .sobre {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

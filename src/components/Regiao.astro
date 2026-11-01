@@ -1,0 +1,74 @@
+---
+import { site } from '../config';
+---
+
+<section class="section section--tight" id="regiao" aria-labelledby="regiao-title">
+  <div class="container regiao reveal">
+    <div>
+      <p class="eyebrow">Região atendida</p>
+      <h2 class="section__title split-headline" id="regiao-title" data-split>Belo Horizonte</h2>
+      <p class="section__lead">
+        O atendimento domiciliar é realizado em {site.city}.
+        Fale comigo para confirmar se o seu bairro está dentro da área de atendimento.
+      </p>
+    </div>
+    <div class="regiao__map" aria-hidden="true">
+      <div class="regiao__pin">
+        <strong>BH</strong>
+        <span>Atendimento domiciliar</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .regiao {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--space-6);
+    align-items: center;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .regiao__map {
+    min-height: 14rem;
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(circle at 55% 45%, rgba(79, 111, 92, 0.22), transparent 42%),
+      linear-gradient(145deg, var(--rose-100), var(--cream-dark));
+    display: grid;
+    place-items: center;
+    border: 1px dashed var(--rose-soft);
+  }
+
+  .regiao__pin {
+    text-align: center;
+    background: var(--graphite-900);
+    color: var(--rose-50);
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .regiao__pin strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: #fff;
+  }
+
+  .regiao__pin span {
+    font-size: 0.85rem;
+    color: var(--rose-soft);
+  }
+
+  @media (max-width: 800px) {
+    .regiao {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

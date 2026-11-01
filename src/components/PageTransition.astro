@@ -1,0 +1,70 @@
+---
+---
+<div class="page-curtain" data-page-curtain aria-hidden="true" transition:persist="page-curtain">
+  <div class="page-curtain__panel page-curtain__panel--a"></div>
+  <div class="page-curtain__panel page-curtain__panel--b"></div>
+  <div class="page-curtain__mark">
+    <img src="/brand/logo-emblem.svg" width="120" height="120" alt="" />
+  </div>
+</div>
+
+<style is:global>
+  .page-curtain {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    pointer-events: none;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+  }
+  .page-curtain.is-active {
+    pointer-events: all;
+    opacity: 1;
+  }
+  .page-curtain__panel {
+    position: absolute;
+    inset: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  .page-curtain__panel--a {
+    background: #58595B;
+    z-index: 1;
+  }
+  .page-curtain__panel--b {
+    background: #C9978F;
+    z-index: 2;
+    transform-origin: bottom;
+  }
+  .page-curtain__mark {
+    position: relative;
+    z-index: 3;
+    width: min(7rem, 28vw);
+    height: min(7rem, 28vw);
+    border-radius: 50%;
+    background: #58595B;
+    opacity: 0;
+    transform: scale(0.85);
+    overflow: hidden;
+  }
+  .page-curtain__mark img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: contain;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .page-curtain { display: none !important; }
+  }
+
+  /* Astro view transition fallbacks */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+  .page-title {
+    view-transition-name: page-title;
+  }
+</style>

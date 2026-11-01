@@ -1,0 +1,35 @@
+---
+const items = [
+  'Atendimento domiciliar',
+  'Fisioterapia em idosos',
+  'DTM',
+  'DOF',
+  'Belo Horizonte',
+];
+---
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <div class="marquee__group">
+      {items.map((item, i) => (
+        <>
+          <span>{item}</span>
+          {i < items.length - 1 && <span aria-hidden="true">•</span>}
+        </>
+      ))}
+      <span aria-hidden="true">•</span>
+    </div>
+    <div class="marquee__group">
+      {items.map((item, i) => (
+        <>
+          <span>{item}</span>
+          {i < items.length - 1 && <span aria-hidden="true">•</span>}
+        </>
+      ))}
+      <span aria-hidden="true">•</span>
+    </div>
+  </div>
+</div>
+<p class="sr-only">
+  Especialidades: Atendimento domiciliar, Fisioterapia em idosos, DTM, DOF, Belo Horizonte.
+</p>

@@ -1,0 +1,15 @@
+---
+interface Props {
+  variant?: 'a' | 'b' | 'c';
+}
+const { variant = 'a' } = Astro.props;
+const paths = {
+  a: 'M0 40 C 180 10, 320 70, 520 34 S 860 8, 1120 42',
+  b: 'M0 28 C 200 60, 360 8, 560 44 S 900 70, 1120 22',
+  c: 'M0 36 C 160 8, 400 68, 640 30 S 960 12, 1120 48',
+};
+---
+
+<svg class="flow-path" viewBox="0 0 1120 64" preserveAspectRatio="none" aria-hidden="true">
+  <path d={paths[variant]} />
+</svg>

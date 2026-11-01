@@ -1,0 +1,108 @@
+---
+const faqs = [
+  {
+    q: 'O atendimento é só em casa?',
+    a: 'Sim. O atendimento é feito em domicílio, em Belo Horizonte. Horários e regiões atendidas são combinados pelo contato.',
+  },
+  {
+    q: 'Quais públicos são atendidos?',
+    a: 'Há atuação em fisioterapia para idosos (geriatria e gerontologia) e em disfunção temporomandibular (DTM) e dor orofacial (DOF). A adequação ao caso é definida após avaliação.',
+  },
+  {
+    q: 'Como agendar uma avaliação?',
+    a: 'Pelo WhatsApp (quando o número estiver disponível neste site) ou pelo Instagram @fisiotuanyeduarda. Informe o motivo do cuidado e a região em Belo Horizonte.',
+  },
+  {
+    q: 'Vocês publicam preços ou resultados garantidos?',
+    a: 'Valores e detalhes do acompanhamento são combinados no contato, após entender o seu caso. Não trabalhamos com promessas de resultado — cada pessoa tem um ritmo.',
+  },
+  {
+    q: 'Qual é o registro profissional?',
+    a: 'CREFITO 361871-F. A profissional é pós-graduada em Geriatria e Gerontologia.',
+  },
+];
+---
+
+<section class="section" id="faq" aria-labelledby="faq-title">
+  <div class="container faq">
+    <header class="section__header reveal">
+      <p class="eyebrow">Perguntas frequentes</p>
+      <h2 class="section__title split-headline" id="faq-title" data-split>Tire suas dúvidas</h2>
+      <p class="section__lead">
+        Respostas objetivas para quem está conhecendo o atendimento.
+      </p>
+    </header>
+
+    <div class="faq__list" data-stagger>
+      {faqs.map((item, i) => (
+        <details class="faq__item" open={i === 0}>
+          <summary>{item.q}</summary>
+          <div class="faq__body">
+            <p>{item.a}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: var(--space-7);
+    align-items: start;
+  }
+
+  .faq__list {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .faq__item {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 0.15rem 1.1rem;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .faq__item summary {
+    cursor: pointer;
+    list-style: none;
+    font-weight: 600;
+    color: var(--graphite-950);
+    padding: 1rem 0;
+    font-size: 1.02rem;
+  }
+
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__item summary::after {
+    content: '+';
+    float: right;
+    color: var(--rose-deep);
+    font-weight: 500;
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .faq__item[open] summary::after {
+    content: '–';
+  }
+
+  .faq__item p {
+    color: var(--ink-soft);
+    padding-bottom: 1rem;
+    margin-top: -0.25rem;
+  }
+
+  @media (max-width: 860px) {
+    .faq {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+  }
+</style>

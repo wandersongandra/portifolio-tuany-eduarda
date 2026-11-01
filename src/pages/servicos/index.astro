@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { site } from '../../config';
+import { services } from '../../data/services';
+---
+<BaseLayout
+  title={`Serviços | ${site.name} — Fisioterapeuta`}
+  description="Atendimento domiciliar, fisioterapia geriátrica, DTM e dor orofacial (DOF) em Belo Horizonte."
+  canonicalPath="/servicos/">
+  <Header />
+  <main id="conteudo" class="page-main">
+    <header class="page-hero container">
+      <p class="eyebrow">Serviços</p>
+      <h1 class="page-title section__title" transition:name="page-title">Cuidado especializado, perto de você</h1>
+      <p class="section__lead">Quatro frentes de atendimento, sempre com escuta atenta e um plano feito para cada pessoa.</p>
+    </header>
+
+    <div class="stack-wrap">
+      {services.map((s, i) => (
+        <article class="stack-card" data-stack-card style={`--i:${i}`} id={s.slug}>
+          <div class="stack-card__inner">
+            <p class="stack-card__n">0{i + 1}</p>
+            <h2>{s.title}</h2>
+            <p>{s.text}</p>
+            <ul>
+              {s.points.map((p) => <li>{p}</li>)}
+            </ul>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="container section section--tight">
+      <p class="servicos__ethics">
+        O tratamento é definido após uma avaliação individual, de acordo com as necessidades de cada paciente.
+      </p>
+      <p style="text-align:center;margin-top:1.5rem">
+        <a class="btn btn--primary" href="/contato/">Falar sobre o seu caso</a>
+      </p>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .page-hero { padding-block: clamp(2.5rem, 6vw, 4.5rem) 1rem; max-width: 42rem; }
+  .stack-wrap {
+    width: min(100% - (var(--gutter) * 2), 720px);
+    margin: 2rem auto 4rem;
+    display: grid;
+    gap: 1.25rem;
+  }
+  @media (min-width: 901px) {
+    .stack-wrap {
+      position: relative;
+      height: 280vh;
+      display: block;
+    }
+    .stack-card {
+      position: sticky;
+      top: calc(5.5rem + (var(--i) * 1.1rem));
+      margin-bottom: 1.5rem;
+    }
+  }
+  .stack-card__inner {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lift);
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    min-height: 16rem;
+  }
+  .stack-card__n {
+    font-family: var(--font-display);
+    color: var(--rose-deep);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  .stack-card h2 {
+    font-size: var(--fs-h2);
+    margin-bottom: 0.75rem;
+  }
+  .stack-card p { color: var(--ink-soft); margin-bottom: 1rem; }
+  .stack-card ul { display: grid; gap: 0.45rem; }
+  .stack-card li {
+    padding-left: 1.1rem;
+    position: relative;
+    color: var(--ink-soft);
+    font-size: var(--fs-small);
+  }
+  .stack-card li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0.55em;
+    width: 0.4rem; height: 0.4rem;
+    border-radius: 50%;
+    background: var(--rose);
+  }
+  .servicos__ethics {
+    text-align: center;
+    max-width: 40rem;
+    margin-inline: auto;
+    color: var(--ink-muted);
+    font-size: var(--fs-small);
+  }
+</style>

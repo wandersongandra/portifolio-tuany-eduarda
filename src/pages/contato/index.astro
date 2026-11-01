@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Contato from '../../components/Contato.astro';
+import { site } from '../../config';
+---
+<BaseLayout
+  title={`Contato | ${site.name} — Fisioterapeuta`}
+  description={`Fale com ${site.name} sobre atendimento domiciliar em Belo Horizonte.`}
+  canonicalPath="/contato/">
+  <Header />
+  <main id="conteudo" class="page-main">
+    <header class="page-hero container">
+      <p class="eyebrow">Contato</p>
+      <h1 class="page-title section__title" transition:name="page-title">Vamos conversar</h1>
+      <p class="section__lead">WhatsApp ou Instagram — conte o motivo do contato para orientar o primeiro atendimento.</p>
+    </header>
+    <div class="container section section--tight">
+      <Contato />
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .page-hero { padding-block: clamp(2.5rem, 6vw, 4.5rem) 1rem; max-width: 42rem; }
+</style>

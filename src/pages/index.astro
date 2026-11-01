@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Preloader from '../components/Preloader.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import BigType from '../components/BigType.astro';
+import Sobre from '../components/Sobre.astro';
+import FlowPath from '../components/FlowPath.astro';
+import Servicos from '../components/Servicos.astro';
+import ComoFunciona from '../components/ComoFunciona.astro';
+import Regiao from '../components/Regiao.astro';
+import Faq from '../components/Faq.astro';
+import Contato from '../components/Contato.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout canonicalPath="/">
+  <Preloader />
+  <Header />
+  <main id="conteudo">
+    <Hero />
+    <Marquee />
+    <BigType />
+    <div data-bg="cream">
+      <Sobre />
+    </div>
+    <FlowPath variant="a" />
+    <div data-bg="sage">
+      <Servicos teaser />
+    </div>
+    <FlowPath variant="b" />
+    <ComoFunciona />
+    <FlowPath variant="c" />
+    <div data-bg="sand">
+      <Regiao />
+    </div>
+    <div data-bg="deep">
+      <Faq />
+    </div>
+    <div class="section section--tight" data-bg="sage">
+      <div class="container">
+        <Contato />
+      </div>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,118 @@
+---
+import { site } from '../config';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__brand">
+      <strong>{site.name}</strong>
+      <p>Fisioterapeuta · CREFITO {site.crefito}</p>
+      <p>Pós-graduada em Geriatria e Gerontologia</p>
+      <p>{site.city}, MG</p>
+      <div class="footer-badge" aria-hidden="true">
+        <img src="/brand/logo-badge.svg" width="120" height="120" alt="" />
+      </div>
+    </div>
+
+    <div class="site-footer__nav">
+      <p class="site-footer__label">Navegação</p>
+      <ul>
+        <li><a href="/sobre/">Sobre</a></li>
+        <li><a href="/servicos/">Serviços</a></li>
+        <li><a href="/#como-funciona">Como funciona</a></li>
+        <li><a href="/contato/">Contato</a></li>
+      </ul>
+    </div>
+
+    <div class="site-footer__social">
+      <p class="site-footer__label">Redes</p>
+      <a href={site.instagram.url} rel="noopener noreferrer" target="_blank">
+        Instagram {site.instagram.handle}
+      </a>
+    </div>
+  </div>
+
+  <div class="container site-footer__legal">
+    <p>
+      Conteúdo informativo sobre o atendimento. Não substitui avaliação presencial.
+      CREFITO {site.crefito}.
+    </p>
+    <p>© {year} {site.name}. Site elaborado por <a href="https://www.gandra.tech" rel="noopener noreferrer" target="_blank">gandra.tech</a>.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--graphite-950);
+    color: var(--graphite-200);
+    padding-block: var(--space-8) var(--space-6);
+    margin-top: var(--space-4);
+  }
+
+  .site-footer a {
+    color: var(--cream);
+    text-decoration: none;
+  }
+
+  .site-footer a:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  .site-footer__inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: var(--space-6);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid rgba(232, 240, 234, 0.12);
+  }
+
+  .site-footer__brand strong {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    color: #fff;
+    margin-bottom: 0.65rem;
+  }
+
+  .site-footer__brand p {
+    margin-bottom: 0.25rem;
+    font-size: var(--fs-small);
+  }
+
+  .site-footer__label {
+    font-size: var(--fs-eyebrow);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--graphite-300);
+    margin-bottom: 0.85rem;
+    font-weight: 600;
+  }
+
+  .site-footer__nav ul {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .site-footer__legal {
+    padding-top: var(--space-5);
+    display: grid;
+    gap: 0.65rem;
+    font-size: 0.85rem;
+    color: var(--graphite-300);
+  }
+
+  .site-footer__legal a {
+    color: #f4f8f5;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  @media (max-width: 800px) {
+    .site-footer__inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+  }
+</style>

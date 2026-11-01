@@ -1,0 +1,31 @@
+{
+  "name": "fisio-tuany",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Site estático de Tuany Eduarda, fisioterapeuta — atendimento domiciliar em BH. Prévia local (noindex).",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview --host 127.0.0.1 --port 4321",
+    "astro": "astro",
+    "serve": "npx --yes serve dist -l 8767 --no-request-logging",
+    "a11y": "node scripts/a11y.mjs",
+    "links": "node scripts/links.mjs",
+    "qa": "npm run build && npm run a11y && npm run links"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.4.4",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.27"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "linkinator": "^6.1.2",
+    "playwright": "^1.49.0"
+  }
+}
