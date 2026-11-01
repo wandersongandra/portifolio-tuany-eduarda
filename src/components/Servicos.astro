@@ -23,7 +23,7 @@ const list = teaser ? services.slice(0, 3) : services;
 
     <div class={`grid ${list.length > 3 ? 'grid--2' : 'grid--3'}`} data-stagger>
       {list.map((s) => (
-        <article class="card" data-card data-tilt>
+        <article class="card" data-card data-tilt data-cursor="Ver" data-rgb-hover>
           <span class="card__glow" aria-hidden="true"></span>
           <div class="card__icon" aria-hidden="true">
             {s.icon === 'home' && (

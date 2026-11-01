@@ -11,9 +11,9 @@ import { services } from '../../data/services';
   canonicalPath="/servicos/">
   <Header />
   <main id="conteudo" class="page-main">
-    <header class="page-hero container">
+    <header class="page-hero container" data-shared-hero>
       <p class="eyebrow">Serviços</p>
-      <h1 class="page-title section__title" transition:name="page-title">Cuidado especializado, perto de você</h1>
+      <h1 class="page-title section__title" transition:name="page-title" data-flip>Cuidado especializado, perto de você</h1>
       <p class="section__lead">Quatro frentes de atendimento, sempre com escuta atenta e um plano feito para cada pessoa.</p>
     </header>
 
@@ -74,7 +74,7 @@ import { services } from '../../data/services';
   }
   .stack-card__n {
     font-family: var(--font-display);
-    color: var(--rose-deep);
+    color: var(--rose-dark);
     font-size: 2rem;
     margin-bottom: 0.5rem;
   }

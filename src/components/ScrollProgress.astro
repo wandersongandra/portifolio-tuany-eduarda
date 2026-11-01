@@ -1,0 +1,46 @@
+---
+---
+<div class="scroll-hud" data-scroll-hud aria-hidden="true">
+  <span class="scroll-hud__pct" data-scroll-pct>00</span>
+  <span class="scroll-hud__label">scroll</span>
+  <span class="scroll-hud__sec" data-scroll-sec>01</span>
+</div>
+<style>
+  .scroll-hud {
+    position: fixed;
+    right: clamp(0.75rem, 2vw, 1.5rem);
+    bottom: clamp(0.75rem, 2vw, 1.5rem);
+    z-index: 60;
+    display: grid;
+    gap: 0.15rem;
+    justify-items: end;
+    pointer-events: none;
+    font-variant-numeric: tabular-nums;
+    color: var(--graphite-950);
+    background: rgba(247, 243, 238, 0.82);
+    border: 1px solid var(--line);
+    border-radius: 0.85rem;
+    padding: 0.45rem 0.65rem;
+    backdrop-filter: blur(8px);
+  }
+  .scroll-hud__pct {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    line-height: 1;
+    font-weight: 500;
+  }
+  .scroll-hud__label {
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .scroll-hud__sec {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    opacity: 0.85;
+  }
+  @media (max-width: 900px), (prefers-reduced-motion: reduce) {
+    .scroll-hud { display: none; }
+  }
+</style>

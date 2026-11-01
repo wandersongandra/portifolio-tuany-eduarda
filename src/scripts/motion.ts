@@ -2,6 +2,24 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 
+import {
+  initCustomCursor,
+  initMagneticNav,
+  initButtonFills,
+  initScrollHud,
+  initCharFlip,
+  initKinetic,
+  initHorizon,
+  initHeroZoom,
+  initEmblemPath,
+  initNightTheme,
+  initRevealFooter,
+  initRgbHover,
+  initWebGL,
+  initSharedMorph,
+  forceRevealsInView,
+} from './effects-v6';
+
 gsap.registerPlugin(ScrollTrigger);
 
 const reduceMotion = () =>
@@ -20,6 +38,14 @@ function on(el: EventTarget | null, type: string, fn: EventListener, opts?: AddE
   el.addEventListener(type, fn, opts);
   cleanups.push(() => el.removeEventListener(type, fn, opts));
 }
+
+function syncHeaderHeight() {
+  const header = document.querySelector<HTMLElement>('.site-header');
+  if (!header) return;
+  const h = Math.ceil(header.getBoundingClientRect().height);
+  document.documentElement.style.setProperty('--header-h', `${h}px`);
+}
+
 
 function revealAllStatic() {
   document
@@ -52,7 +78,8 @@ function destroyMotion() {
     lenis = null;
   }
   gsap.globalTimeline.clear();
-  document.documentElement.classList.remove('motion-ready', 'has-como-pin');
+  document.documentElement.classList.remove('motion-ready', 'has-como-pin', 'has-reveal-footer');
+  delete document.documentElement.dataset.theme;
 }
 
 function splitHeadlines() {
@@ -210,16 +237,20 @@ function initHero(delay = 0) {
 }
 
 function initSectionReveals() {
+  const mob = isMobile();
+  const start = mob ? 'top 92%' : 'top 88%';
+  const dur = mob ? 0.45 : 0.85;
+  const y0 = mob ? 12 : 22;
   document.querySelectorAll<HTMLElement>('.reveal').forEach((el) => {
     gsap.fromTo(
       el,
-      { opacity: 0, y: 22 },
+      { opacity: 0, y: y0 },
       {
         opacity: 1,
         y: 0,
-        duration: 0.85,
+        duration: dur,
         ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 88%' },
+        scrollTrigger: { trigger: el, start, once: true },
       }
     );
   });
@@ -228,14 +259,14 @@ function initSectionReveals() {
     if (!kids.length) return;
     gsap.fromTo(
       kids,
-      { opacity: 0, y: 26 },
+      { opacity: 0, y: mob ? 14 : 26 },
       {
         opacity: 1,
         y: 0,
-        stagger: 0.1,
-        duration: 0.75,
+        stagger: mob ? 0.05 : 0.1,
+        duration: mob ? 0.4 : 0.75,
         ease: 'power3.out',
-        scrollTrigger: { trigger: wrap, start: 'top 82%' },
+        scrollTrigger: { trigger: wrap, start: mob ? 'top 92%' : 'top 82%', once: true },
       }
     );
   });
@@ -250,7 +281,7 @@ function initSplitReveals() {
         yPercent: 0,
         duration: 0.95,
         ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 90%' },
+        scrollTrigger: { trigger: el, start: isMobile() ? 'top 92%' : 'top 90%', once: true },
       }
     );
   });
@@ -312,9 +343,13 @@ function initComoPin() {
   if (!pin || !track) return;
   document.documentElement.classList.add('has-como-pin');
   const total = () => Math.max(0, track.scrollWidth - window.innerWidth + 48);
+  const headerOffset = () => {
+    const header = document.querySelector<HTMLElement>('.site-header');
+    return header ? Math.ceil(header.getBoundingClientRect().height) : 68;
+  };
   ScrollTrigger.create({
     trigger: pin,
-    start: 'top top',
+    start: () => `top top+=${headerOffset()}`,
     end: () => `+=${total() + window.innerHeight * 0.4}`,
     pin: true,
     scrub: 1,
@@ -406,7 +441,7 @@ function initParallaxDecor() {
 function initBigType() {
   const fill = document.querySelector<HTMLElement>('[data-big-fill] .big-type__fill');
   const section = document.querySelector('[data-big-type]');
-  if (!fill || !section || reduceMotion()) return;
+  if (!fill || !section || reduceMotion() || isMobile()) return;
   gsap.fromTo(
     fill,
     { clipPath: 'inset(0 100% 0 0)' },
@@ -545,7 +580,27 @@ async function runPageMotion(opts: { withPreloader: boolean }) {
   initParallaxDecor();
   initBigType();
   initScramble();
+  initCustomCursor(cleanups);
+  initMagneticNav(cleanups);
+  initButtonFills(cleanups);
+  initScrollHud(cleanups);
+  initCharFlip(cleanups);
+  initKinetic(cleanups);
+  initHorizon(cleanups);
+  initHeroZoom(cleanups);
+  initEmblemPath(cleanups);
+  initNightTheme(cleanups);
+  initRevealFooter(cleanups);
+  initRgbHover(cleanups);
+  void initWebGL(cleanups);
+  initSharedMorph(cleanups);
   initWaPlaceholder();
+  syncHeaderHeight();
+  on(window, 'resize', syncHeaderHeight, { passive: true });
+  // Ensure anything already in view is fully visible (esp. mobile).
+  forceRevealsInView();
+  window.setTimeout(() => forceRevealsInView(), 400);
+  window.setTimeout(() => forceRevealsInView(), 1200);
   requestAnimationFrame(() => ScrollTrigger.refresh());
 }
 
@@ -555,12 +610,14 @@ function playCurtainCover(): Promise<void> {
   const a = curtain.querySelector('.page-curtain__panel--a');
   const b = curtain.querySelector('.page-curtain__panel--b');
   const mark = curtain.querySelector('.page-curtain__mark');
+  const wipe = curtain.querySelector('.page-curtain__wipe');
   curtain.classList.add('is-active');
   return new Promise((resolve) => {
     const tl = gsap.timeline({ onComplete: () => resolve() });
-    tl.fromTo(a, { scaleY: 0, transformOrigin: 'top' }, { scaleY: 1, duration: 0.42, ease: 'power3.inOut' }, 0);
-    tl.fromTo(b, { scaleY: 0, transformOrigin: 'bottom' }, { scaleY: 1, duration: 0.42, ease: 'power3.inOut' }, 0.06);
-    tl.to(mark, { opacity: 1, scale: 1, duration: 0.3 }, 0.18);
+    tl.fromTo(wipe, { scale: 0, opacity: 0.9 }, { scale: 4.2, opacity: 1, duration: 0.55, ease: 'power3.inOut' }, 0);
+    tl.fromTo(a, { scaleY: 0, transformOrigin: 'top' }, { scaleY: 1, duration: 0.42, ease: 'power3.inOut' }, 0.12);
+    tl.fromTo(b, { scaleY: 0, transformOrigin: 'bottom' }, { scaleY: 1, duration: 0.42, ease: 'power3.inOut' }, 0.18);
+    tl.to(mark, { opacity: 1, scale: 1, duration: 0.3 }, 0.28);
   });
 }
 
@@ -570,17 +627,20 @@ function playCurtainReveal(): Promise<void> {
   const a = curtain.querySelector('.page-curtain__panel--a');
   const b = curtain.querySelector('.page-curtain__panel--b');
   const mark = curtain.querySelector('.page-curtain__mark');
+  const wipe = curtain.querySelector('.page-curtain__wipe');
   return new Promise((resolve) => {
     const tl = gsap.timeline({
       onComplete: () => {
         curtain.classList.remove('is-active');
         gsap.set([a, b], { scaleY: 0 });
         gsap.set(mark, { opacity: 0, scale: 0.85 });
+        gsap.set(wipe, { scale: 0, opacity: 0 });
         resolve();
       },
     });
     tl.to(mark, { opacity: 0, scale: 1.06, duration: 0.25 }, 0);
-    tl.to([b, a], { scaleY: 0, transformOrigin: 'top', duration: 0.42, stagger: 0.05, ease: 'power3.inOut' }, 0.05);
+    tl.to(wipe, { scale: 0, opacity: 0, duration: 0.45, ease: 'power3.inOut' }, 0.05);
+    tl.to([b, a], { scaleY: 0, transformOrigin: 'top', duration: 0.42, stagger: 0.05, ease: 'power3.inOut' }, 0.08);
   });
 }
 

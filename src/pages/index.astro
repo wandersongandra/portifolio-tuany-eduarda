@@ -4,34 +4,51 @@ import Preloader from '../components/Preloader.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
 import Marquee from '../components/Marquee.astro';
+import KineticBand from '../components/KineticBand.astro';
 import BigType from '../components/BigType.astro';
 import Sobre from '../components/Sobre.astro';
 import FlowPath from '../components/FlowPath.astro';
+import HorizonStrip from '../components/HorizonStrip.astro';
 import Servicos from '../components/Servicos.astro';
 import ComoFunciona from '../components/ComoFunciona.astro';
 import Regiao from '../components/Regiao.astro';
 import Faq from '../components/Faq.astro';
 import Contato from '../components/Contato.astro';
 import Footer from '../components/Footer.astro';
+import EmblemPath from '../components/EmblemPath.astro';
 ---
 
 <BaseLayout canonicalPath="/">
   <Preloader />
   <Header />
-  <main id="conteudo">
+  <main id="conteudo" style="position:relative">
+    <EmblemPath />
     <Hero />
     <Marquee />
+    <KineticBand />
     <BigType />
     <div data-bg="cream">
       <Sobre />
     </div>
     <FlowPath variant="a" />
+    <HorizonStrip />
     <div data-bg="sage">
       <Servicos teaser />
     </div>
     <FlowPath variant="b" />
     <ComoFunciona />
     <FlowPath variant="c" />
+    <section class="night-band" data-theme="night" data-bg="deep" aria-labelledby="night-title">
+      <div class="container night-band__inner">
+        <p class="eyebrow">Presença no território</p>
+        <h2 id="night-title" data-flip>Cuidado que chega até você</h2>
+        <p>
+          Atendimento domiciliar em Belo Horizonte, com foco em fisioterapia para idosos,
+          DTM e dor orofacial — com ética e clareza sobre o que o atendimento pode oferecer.
+        </p>
+        <a class="btn btn--ghost-light btn--magnetic" href="/contato/">Falar no WhatsApp</a>
+      </div>
+    </section>
     <div data-bg="sand">
       <Regiao />
     </div>

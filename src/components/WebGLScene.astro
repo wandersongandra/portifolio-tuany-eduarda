@@ -1,0 +1,18 @@
+---
+---
+<canvas class="webgl-scene" data-webgl-scene aria-hidden="true"></canvas>
+<style>
+  .webgl-scene {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.85;
+  }
+  @media (max-width: 900px), (prefers-reduced-motion: reduce) {
+    .webgl-scene { display: none !important; }
+  }
+</style>

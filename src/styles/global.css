@@ -18,7 +18,7 @@
   --graphite-50: #F3F3F4;
 
   --rose: #C9978F;
-  --rose-deep: #9E6F68;   /* AA on cream */
+  --rose-deep: #7E5651;   /* AA on cream (was #9E6F68, failed 3.85) */
   --rose-dark: #7E5651;
   --rose-soft: #E2C4BE;
   --rose-100: #F3E6E3;
@@ -200,7 +200,7 @@ ol {
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--rose-deep);
+  color: var(--rose-dark);
   margin-bottom: var(--space-3);
 }
 
@@ -738,7 +738,7 @@ html.lenis, html.lenis body {
    ========================================================= */
 
 :root {
-  --page-bg: #faf7f2;
+  --page-bg: #F7F3EE;
 }
 
 body {
@@ -943,4 +943,273 @@ body {
 }
 a { color: var(--rose-dark); }
 a:hover { color: var(--graphite-950); }
-.eyebrow { color: var(--rose-deep); }
+.eyebrow { color: var(--rose-dark); }
+
+/* ========== v6: cursor, flip, night, rgb, buttons ========== */
+.has-cursor,
+.has-cursor * {
+  cursor: none !important;
+}
+.c-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 400;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  color: #fff;
+}
+.c-cursor__dot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: currentColor;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+.c-cursor__label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.6);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.c-cursor[data-mode='link'] .c-cursor__dot {
+  transform: scale(2.2);
+}
+.c-cursor[data-mode='card'] {
+  width: 72px;
+  height: 72px;
+  margin: -36px 0 0 -36px;
+}
+.c-cursor[data-mode='card'] .c-cursor__dot {
+  background: transparent;
+  border: 1.5px solid currentColor;
+  transform: scale(1);
+}
+.c-cursor[data-mode='card'] .c-cursor__label {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+.btn__ink,
+.btn__ripple {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0);
+  background: currentColor;
+  opacity: 0;
+  z-index: 0;
+}
+.btn > *:not(.btn__ink):not(.btn__ripple) {
+  position: relative;
+  z-index: 1;
+}
+
+.flip-wrap {
+  display: inline-flex;
+  flex-wrap: wrap;
+  perspective: 600px;
+}
+.flip-char {
+  display: inline-block;
+  overflow: hidden;
+  line-height: 1.05;
+}
+.flip-char__inner {
+  display: inline-block;
+  transform-origin: 50% 100%;
+  backface-visibility: hidden;
+}
+.flip-char.is-space {
+  width: 0.28em;
+}
+
+.night-band {
+  background: #2f3032;
+  color: var(--cream);
+  padding-block: clamp(4rem, 10vw, 7rem);
+  position: relative;
+}
+.night-band__inner {
+  max-width: 42rem;
+  display: grid;
+  gap: 1.1rem;
+}
+.night-band h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  line-height: 1.05;
+  color: #fff;
+  margin: 0;
+}
+.night-band p {
+  color: rgba(247, 243, 238, 0.78);
+  margin: 0;
+}
+.night-band .eyebrow {
+  color: #E2C4BE;
+}
+.btn--ghost-light {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(247, 243, 238, 0.45);
+}
+.btn--ghost-light:hover {
+  background: rgba(247, 243, 238, 0.08);
+}
+
+html[data-theme='night'] body,
+html[data-theme='night'] {
+  --page-bg: #2f3032;
+}
+html[data-theme='night'] .site-header:not(.is-scrolled) {
+  color: #fff;
+}
+
+[data-rgb-hover] {
+  position: relative;
+  transition: filter 0.35s ease;
+}
+[data-rgb-hover].is-rgb {
+  filter: drop-shadow(calc(var(--rx, 0px) * -1) calc(var(--ry, 0px) * -0.5) 0 rgba(201, 151, 143, 0.55))
+    drop-shadow(var(--rx, 0px) var(--ry, 0px) 0 rgba(88, 89, 91, 0.35));
+}
+
+.hero {
+  will-change: transform;
+  transform-origin: 50% 40%;
+}
+
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  .has-cursor,
+  .has-cursor * {
+    cursor: auto !important;
+  }
+  .c-cursor {
+    display: none !important;
+  }
+}
+
+
+/* ========== v6b: reveal footer shell ========== */
+.footer-spacer {
+  display: none;
+  width: 100%;
+  pointer-events: none;
+  background: transparent;
+}
+
+@media (min-width: 901px) {
+  html.has-reveal-footer .footer-spacer {
+    display: block;
+    height: var(--footer-h, 32rem);
+  }
+  html.has-reveal-footer .site-footer[data-reveal-footer] {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+  }
+  /* Opaque content layer ABOVE the fixed footer */
+  html.has-reveal-footer main#conteudo {
+    position: relative;
+    z-index: 2;
+    background-color: var(--page-bg, #F7F3EE);
+    isolation: isolate;
+  }
+  html.has-reveal-footer .site-header {
+    z-index: 100;
+  }
+}
+
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  html.has-reveal-footer .site-footer[data-reveal-footer] {
+    position: static !important;
+  }
+  html.has-reveal-footer .footer-spacer {
+    display: none !important;
+    height: 0 !important;
+  }
+}
+
+.night-band {
+  background: #2f3032 !important;
+  color: var(--cream);
+  min-height: 18rem;
+  position: relative;
+  z-index: 1;
+}
+.night-band h2,
+.night-band .flip-char__inner {
+  color: #fff;
+}
+
+.hero {
+  background-color: var(--page-bg, #F7F3EE);
+  will-change: transform;
+  transform-origin: 50% 40%;
+}
+
+
+/* ========== v6c: fixed chrome + layout ========== */
+html,
+body {
+  transform: none !important;
+  filter: none !important;
+  perspective: none !important;
+}
+
+:root {
+  --header-h: 4.25rem;
+}
+
+/* Space for fixed header — content never slides under invisibly */
+body > main#conteudo,
+main#conteudo {
+  padding-top: var(--header-h);
+}
+
+.page-curtain {
+  z-index: 300;
+}
+.site-header {
+  z-index: 200 !important;
+  top: 0 !important;
+}
+.nav-overlay {
+  z-index: 250;
+}
+.scroll-hud {
+  z-index: 180;
+}
+.c-cursor {
+  z-index: 400;
+}
+
+/* Horizon / pin sections clear the fixed header */
+.horizon__pin,
+.como-pin,
+.big-type__sticky {
+  top: var(--header-h);
+}
+
+@media (max-width: 900px) {
+  :root { --header-h: 3.75rem; }
+}

@@ -1,0 +1,54 @@
+---
+import { services } from '../data/services';
+---
+<section class="horizon" data-horizon aria-label="Serviços em destaque">
+  <div class="horizon__pin">
+    <div class="horizon__track" data-horizon-track>
+      {services.map((s) => (
+        <a class="horizon__card" href={`/servicos/#${s.slug}`} data-cursor="Ver">
+          <span class="horizon__n">{s.title}</span>
+          <p>{s.short}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .horizon {
+    background: var(--cream);
+  }
+  .horizon__pin {
+    overflow: hidden;
+    padding-block: 2rem;
+  }
+  .horizon__track {
+    display: flex;
+    gap: 1.25rem;
+    width: max-content;
+    padding-inline: var(--gutter);
+    will-change: transform;
+  }
+  .horizon__card {
+    flex: 0 0 min(78vw, 22rem);
+    min-height: 14rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-soft);
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    display: grid;
+    align-content: end;
+    gap: 0.75rem;
+  }
+  .horizon__n {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    color: var(--graphite-950);
+  }
+  .horizon__card p { color: var(--ink-soft); margin: 0; }
+  @media (max-width: 900px) {
+    .horizon__track { gap: 0.85rem; }
+  }
+</style>

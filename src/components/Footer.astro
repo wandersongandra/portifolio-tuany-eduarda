@@ -3,16 +3,24 @@ import { site } from '../config';
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer">
+<div class="footer-spacer" data-footer-spacer aria-hidden="true"></div>
+<footer class="site-footer" data-reveal-footer>
+  <div class="footer-giant" aria-hidden="true">
+    <div class="footer-giant__badge">
+      <div class="footer-giant__disc">
+        <img class="footer-giant__emblem" src="/brand/logo-emblem.svg" width="120" height="120" alt="" />
+        <img class="footer-giant__ring" src="/brand/logo-text-ring.svg" width="120" height="120" alt="" />
+      </div>
+    </div>
+    <span class="footer-giant__name">Tuany Eduarda</span>
+  </div>
+
   <div class="container site-footer__inner">
     <div class="site-footer__brand">
       <strong>{site.name}</strong>
       <p>Fisioterapeuta · CREFITO {site.crefito}</p>
       <p>Pós-graduada em Geriatria e Gerontologia</p>
       <p>{site.city}, MG</p>
-      <div class="footer-badge" aria-hidden="true">
-        <img src="/brand/logo-badge.svg" width="120" height="120" alt="" />
-      </div>
     </div>
 
     <div class="site-footer__nav">
@@ -47,19 +55,65 @@ const year = new Date().getFullYear();
     background: var(--graphite-950);
     color: var(--graphite-200);
     padding-block: var(--space-8) var(--space-6);
-    margin-top: var(--space-4);
+    margin-top: 0;
+  }
+
+  .footer-giant {
+    display: grid;
+    justify-items: center;
+    gap: 0.75rem;
+    padding: clamp(1.25rem, 3vw, 2.5rem) var(--gutter) 0.35rem;
+    overflow: hidden;
+  }
+  .footer-giant__badge {
+    position: relative;
+    width: clamp(5.5rem, 9vw, 7.5rem);
+    height: clamp(5.5rem, 9vw, 7.5rem);
+  }
+  .footer-giant__disc {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #58595B;
+  }
+  .footer-giant__emblem,
+  .footer-giant__ring {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: contain;
+  }
+  .footer-giant__ring {
+    animation: footer-spin 18s linear infinite;
+  }
+  .footer-giant__name {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 12vw, 8.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: rgba(247, 243, 238, 0.12);
+    white-space: nowrap;
+    user-select: none;
+  }
+  @keyframes footer-spin {
+    to { transform: rotate(360deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .footer-giant__ring { animation: none; }
   }
 
   .site-footer a {
     color: var(--cream);
     text-decoration: none;
   }
-
   .site-footer a:hover {
     color: #fff;
     text-decoration: underline;
   }
-
   .site-footer__inner {
     display: grid;
     grid-template-columns: 1.4fr 1fr 1fr;
@@ -67,7 +121,6 @@ const year = new Date().getFullYear();
     padding-bottom: var(--space-6);
     border-bottom: 1px solid rgba(232, 240, 234, 0.12);
   }
-
   .site-footer__brand strong {
     display: block;
     font-family: var(--font-display);
@@ -75,12 +128,10 @@ const year = new Date().getFullYear();
     color: #fff;
     margin-bottom: 0.65rem;
   }
-
   .site-footer__brand p {
     margin-bottom: 0.25rem;
     font-size: var(--fs-small);
   }
-
   .site-footer__label {
     font-size: var(--fs-eyebrow);
     letter-spacing: 0.1em;
@@ -89,12 +140,10 @@ const year = new Date().getFullYear();
     margin-bottom: 0.85rem;
     font-weight: 600;
   }
-
   .site-footer__nav ul {
     display: grid;
     gap: 0.45rem;
   }
-
   .site-footer__legal {
     padding-top: var(--space-5);
     display: grid;
@@ -102,13 +151,11 @@ const year = new Date().getFullYear();
     font-size: 0.85rem;
     color: var(--graphite-300);
   }
-
   .site-footer__legal a {
     color: #f4f8f5;
     text-decoration: underline;
     text-underline-offset: 0.18em;
   }
-
   @media (max-width: 800px) {
     .site-footer__inner {
       grid-template-columns: 1fr;

@@ -1,0 +1,57 @@
+---
+const items = [
+  'Atendimento domiciliar',
+  'Geriatria',
+  'Gerontologia',
+  'DTM',
+  'DOF',
+  'Belo Horizonte',
+  'Cuidado em casa',
+  'CREFITO 361871-F',
+];
+---
+<section class="kinetic" data-kinetic aria-hidden="true">
+  <div class="kinetic__track" data-kinetic-track>
+    {[0,1].map(() => (
+      <div class="kinetic__group">
+        {items.map((t, i) => (
+          <span class:list={['kinetic__item', { 'is-outline': i % 2 === 1 }]}>{t}</span>
+        ))}
+      </div>
+    ))}
+  </div>
+</section>
+<style>
+  .kinetic {
+    overflow: hidden;
+    border-block: 1px solid var(--line);
+    background: var(--graphite-950);
+    color: var(--cream);
+    padding-block: 1.1rem;
+  }
+  .kinetic__track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+  .kinetic__group {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+    padding-inline: 0.875rem;
+    white-space: nowrap;
+  }
+  .kinetic__item {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  .kinetic__item.is-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(235, 229, 223, 0.55);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .kinetic__track { transform: none !important; }
+  }
+</style>

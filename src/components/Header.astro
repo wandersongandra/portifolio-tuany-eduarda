@@ -71,12 +71,16 @@ function active(href: string) {
 
 <style>
   .site-header {
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 50;
+    left: 0;
+    right: 0;
+    z-index: 200;
     backdrop-filter: blur(14px);
-    background: rgba(250, 247, 242, 0.86);
+    background: rgba(250, 247, 242, 0.92);
     border-bottom: 1px solid var(--line);
+    transform: none !important;
+    filter: none !important;
   }
   .site-header__inner {
     display: flex;
@@ -178,7 +182,7 @@ function active(href: string) {
     border: 0;
     background: transparent;
     font: inherit;
-    color: var(--rose-deep);
+    color: var(--rose-dark);
     cursor: pointer;
     font-weight: 600;
   }

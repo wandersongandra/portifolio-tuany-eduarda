@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import { site } from '../config';
 import PageTransition from '../components/PageTransition.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
 
 interface Props {
   title?: string;
@@ -116,6 +117,7 @@ const jsonLd = {
   <body>
     <div class="page-grain" aria-hidden="true"></div>
     <PageTransition />
+    <ScrollProgress />
     <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
     <slot />
     <script>

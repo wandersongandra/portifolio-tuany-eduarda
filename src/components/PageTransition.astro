@@ -3,6 +3,7 @@
 <div class="page-curtain" data-page-curtain aria-hidden="true" transition:persist="page-curtain">
   <div class="page-curtain__panel page-curtain__panel--a"></div>
   <div class="page-curtain__panel page-curtain__panel--b"></div>
+  <div class="page-curtain__wipe" data-curtain-wipe></div>
   <div class="page-curtain__mark">
     <img src="/brand/logo-emblem.svg" width="120" height="120" alt="" />
   </div>
@@ -37,6 +38,16 @@
     z-index: 2;
     transform-origin: bottom;
   }
+  .page-curtain__wipe {
+    position: absolute;
+    inset: -20%;
+    z-index: 2;
+    border-radius: 50%;
+    background: radial-gradient(circle, #58595B 0%, #58595B 58%, transparent 59%);
+    transform: scale(0);
+    opacity: 0;
+    pointer-events: none;
+  }
   .page-curtain__mark {
     position: relative;
     z-index: 3;
@@ -58,7 +69,6 @@
     .page-curtain { display: none !important; }
   }
 
-  /* Astro view transition fallbacks */
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation: none;
@@ -66,5 +76,8 @@
   }
   .page-title {
     view-transition-name: page-title;
+  }
+  [data-shared-hero] {
+    view-transition-name: shared-hero;
   }
 </style>
