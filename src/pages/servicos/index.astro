@@ -19,10 +19,13 @@ import { services } from '../../data/services';
 
     <div class="stack-wrap">
       {services.map((s, i) => (
-        <article class="stack-card" data-stack-card style={`--i:${i}`} id={s.slug}>
-          <div class="stack-card__inner">
-            <p class="stack-card__n">0{i + 1}</p>
-            <h2>{s.title}</h2>
+        <article class="stack-card" data-stack-card data-service-row style={`--i:${i}`} id={s.slug}>
+          <div class="stack-card__inner" data-gradient-card>
+            <div class="stack-card__top">
+              <p class="stack-card__n">0{i + 1}</p>
+              <span class="stack-card__icon" aria-hidden="true" data-icon={s.icon}></span>
+            </div>
+            <h2 data-split>{s.title}</h2>
             <p>{s.text}</p>
             <ul>
               {s.points.map((p) => <li>{p}</li>)}
@@ -105,4 +108,41 @@ import { services } from '../../data/services';
     color: var(--ink-muted);
     font-size: var(--fs-small);
   }
+
+  .stack-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.35rem;
+  }
+  .stack-card__icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--rose-100);
+    border: 1px solid var(--line);
+    position: relative;
+    flex-shrink: 0;
+    transition: transform 0.4s var(--ease), background 0.35s var(--ease);
+  }
+  .stack-card__icon::before {
+    content: '';
+    position: absolute;
+    inset: 28%;
+    border-radius: 2px;
+    background: var(--rose-dark);
+    opacity: 0.7;
+  }
+  .stack-card:hover .stack-card__icon {
+    transform: scale(1.08);
+    background: var(--rose-soft);
+  }
+  .stack-card__inner {
+    transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+  }
+  .stack-card:hover .stack-card__inner {
+    box-shadow: var(--shadow-lift);
+  }
+  .page-hero .section__lead { max-width: 36rem; }
 </style>

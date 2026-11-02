@@ -1213,3 +1213,107 @@ main#conteudo {
 @media (max-width: 900px) {
   :root { --header-h: 3.75rem; }
 }
+
+/* ========== v8 polish ========== */
+h1, h2, h3,
+.section__title,
+.page-title {
+  text-wrap: balance;
+}
+
+.section__lead,
+.card__text,
+.hero__lead {
+  text-wrap: pretty;
+}
+
+.section {
+  padding-block: clamp(3.25rem, 7vw, 5.75rem);
+}
+
+.section--tight {
+  padding-block: clamp(2rem, 4vw, 3.25rem);
+}
+
+.section__header {
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.section__header--center {
+  text-align: center;
+  margin-inline: auto;
+  max-width: 40rem;
+}
+
+.page-main {
+  padding-top: 0.25rem;
+}
+
+.page-hero {
+  padding-block: clamp(2.75rem, 6vw, 4.75rem) 1.25rem;
+}
+
+.page-title {
+  letter-spacing: -0.02em;
+}
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid var(--rose-dark);
+  outline-offset: 3px;
+}
+
+.link-underline {
+  position: relative;
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0 1px;
+  transition: background-size 0.35s var(--ease);
+}
+.link-underline:hover,
+.link-underline:focus-visible {
+  background-size: 100% 1px;
+}
+
+[data-card].is-glow,
+[data-gradient-card].is-glow,
+.stack-card__inner.is-glow {
+  background-image: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(201, 151, 143, 0.18),
+    transparent 55%
+  );
+}
+
+.card {
+  transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), border-color 0.35s var(--ease);
+}
+.card:hover {
+  border-color: rgba(201, 151, 143, 0.45);
+}
+
+.page-grain {
+  opacity: 0.035;
+  pointer-events: none;
+}
+
+html[data-route='sobre'] .page-curtain__panel--a { background: #7E5651; }
+html[data-route='sobre'] .page-curtain__panel--b { background: #E2C4BE; }
+html[data-route='servicos'] .page-curtain__panel--a { background: #3F4042; }
+html[data-route='servicos'] .page-curtain__panel--b { background: #C9978F; }
+html[data-route='contato'] .page-curtain__panel--a { background: #2E2F31; }
+html[data-route='contato'] .page-curtain__panel--b { background: #9E6F68; }
+
+.faq__body {
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .section {
+    padding-block: clamp(2.5rem, 8vw, 3.75rem);
+  }
+}

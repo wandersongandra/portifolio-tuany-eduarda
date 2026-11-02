@@ -1,37 +1,32 @@
 ---
-import { site, whatsappUrl } from '../config';
+import { site, whatsappUrl, primaryContactIsWhatsApp } from '../config';
 import Portrait from './Portrait.astro';
 import contatoPhoto from '../assets/photos/tuany-contato.jpg';
 const wa = whatsappUrl();
+const showWa = primaryContactIsWhatsApp();
 ---
 
 <section id="contato" aria-labelledby="contato-title">
-  <div class="contato reveal">
+  <div class="contato reveal" data-gradient-card>
     <div class="contato__copy">
       <p class="eyebrow" style="color: var(--rose-soft)">Contato</p>
       <h2 class="section__title split-headline" id="contato-title" data-split>Vamos conversar sobre o seu cuidado</h2>
       <p class="contato__lead">
-        Envie uma mensagem pelo WhatsApp ou Instagram. Informe o motivo do
+        Envie uma mensagem pelo {showWa ? 'WhatsApp ou Instagram' : 'Instagram'}. Informe o motivo do
         atendimento e o bairro em Belo Horizonte para combinarmos a avaliação.
       </p>
 
-      {site.whatsappIsPlaceholder && (
-        <p class="contato__placeholder" role="note">
-          O número de WhatsApp ainda é um <strong>placeholder</strong> neste site.
-          Assim que a profissional informar o número real, o botão passará a abrir
-          a conversa diretamente. Enquanto isso, use o Instagram.
-        </p>
-      )}
-
       <div class="btn-row">
-        <a class="btn btn--wa btn--magnetic" href={wa} data-wa-cta>
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-            <path d="M20.5 3.5A11 11 0 0 0 3.1 17.7L2 22l4.4-1.1A11 11 0 1 0 20.5 3.5zm-8.5 17a9 9 0 0 1-4.6-1.3l-.3-.2-2.6.7.7-2.5-.2-.3A9 9 0 1 1 12 20.5zm5-6.7c-.3-.1-1.6-.8-1.8-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-1.9c-.2-.3 0-.4.1-.6l.4-.5.1-.3c0-.1 0-.3-.1-.4s-.6-1.4-.8-1.9-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3a2 2 0 0 0-.6 1.5 3.5 3.5 0 0 0 .7 1.8c.1.2 1.4 2.2 3.4 3.1 2 .9 2 .6 2.4.6s1.2-.1 1.4-.3.9-1 1-1.2.2-.3.1-.5-.2-.2-.5-.3z"/>
-          </svg>
-          WhatsApp
-        </a>
+        {showWa ? (
+          <a class="btn btn--wa btn--magnetic" href={wa} data-wa-cta rel="noopener noreferrer" target="_blank">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+              <path d="M20.5 3.5A11 11 0 0 0 3.1 17.7L2 22l4.4-1.1A11 11 0 1 0 20.5 3.5zm-8.5 17a9 9 0 0 1-4.6-1.3l-.3-.2-2.6.7.7-2.5-.2-.3A9 9 0 1 1 12 20.5zm5-6.7c-.3-.1-1.6-.8-1.8-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-2.2-1.4 8.2 8.2 0 0 1-1.5-1.9c-.2-.3 0-.4.1-.6l.4-.5.1-.3c0-.1 0-.3-.1-.4s-.6-1.4-.8-1.9-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3a2 2 0 0 0-.6 1.5 3.5 3.5 0 0 0 .7 1.8c.1.2 1.4 2.2 3.4 3.1 2 .9 2 .6 2.4.6s1.2-.1 1.4-.3.9-1 1-1.2.2-.3.1-.5-.2-.2-.5-.3z"/>
+            </svg>
+            WhatsApp
+          </a>
+        ) : null}
         <a
-          class="btn btn--light btn--magnetic"
+          class:list={['btn', 'btn--magnetic', showWa ? 'btn--light' : 'btn--wa']}
           href={site.instagram.url}
           rel="noopener noreferrer"
           target="_blank"
@@ -42,50 +37,50 @@ const wa = whatsappUrl();
     </div>
 
     <div class="contato__side">
-      <figure class="contato__photo reveal clip-reveal" data-distort-photo data-rgb-hover>
-        <Portrait
-          src={contatoPhoto}
-          alt="Tuany Eduarda, fisioterapeuta, sorrindo"
-          widths={[280, 420, 640, 900]}
-          sizes="(max-width: 900px) min(88vw, 22rem), min(32vw, 22rem)"
-          loading="lazy"
-          objectPosition="50% 18%"
-          class="contato__img"
-        />
+      <figure class="contato__photo clip-reveal" data-distort-photo data-rgb-hover data-photo-tilt>
+        <div class="photo-parallax" data-photo-inner>
+          <Portrait
+            src={contatoPhoto}
+            alt="Tuany Eduarda, fisioterapeuta, sorrindo"
+            widths={[280, 420, 640, 900]}
+            sizes="(max-width: 900px) min(88vw, 22rem), min(32vw, 22rem)"
+            loading="lazy"
+            objectPosition="50% 18%"
+            class="contato__img"
+          />
+        </div>
         <figcaption class="sr-only">Retrato de {site.name}</figcaption>
       </figure>
-    <div class="contato__card">
-      <dl>
-        <div>
-          <dt>Profissional</dt>
-          <dd>{site.name}</dd>
-        </div>
-        <div>
-          <dt>CREFITO</dt>
-          <dd>{site.crefito}</dd>
-        </div>
-        <div>
-          <dt>Cidade</dt>
-          <dd>{site.city}, {site.state}</dd>
-        </div>
-        <div>
-          <dt>Instagram</dt>
-          <dd>
-            <a href={site.instagram.url} rel="noopener noreferrer" target="_blank">
-              {site.instagram.handle}
-            </a>
-          </dd>
-        </div>
-        <div>
-          <dt>WhatsApp</dt>
-          <dd>
-            {site.whatsappIsPlaceholder
-              ? 'Aguardando número da profissional'
-              : site.whatsapp}
-          </dd>
-        </div>
-      </dl>
-    </div>
+      <div class="contato__card">
+        <dl>
+          <div>
+            <dt>Profissional</dt>
+            <dd>{site.name}</dd>
+          </div>
+          <div>
+            <dt>CREFITO</dt>
+            <dd>{site.crefito}</dd>
+          </div>
+          <div>
+            <dt>Cidade</dt>
+            <dd>{site.city}, {site.state}</dd>
+          </div>
+          <div>
+            <dt>Instagram</dt>
+            <dd>
+              <a class="link-underline" href={site.instagram.url} rel="noopener noreferrer" target="_blank">
+                {site.instagram.handle}
+              </a>
+            </dd>
+          </div>
+          {showWa && (
+            <div>
+              <dt>WhatsApp</dt>
+              <dd>{site.whatsapp}</dd>
+            </div>
+          )}
+        </dl>
+      </div>
     </div>
   </div>
 </section>
@@ -101,10 +96,13 @@ const wa = whatsappUrl();
     border-radius: var(--radius-xl);
     padding: clamp(1.75rem, 4vw, 3rem);
     box-shadow: var(--shadow-lift);
+    position: relative;
+    overflow: hidden;
   }
 
   .contato .section__title {
     color: #fff;
+    text-wrap: balance;
   }
 
   .contato__lead {
@@ -112,18 +110,8 @@ const wa = whatsappUrl();
     font-size: var(--fs-lead);
     margin-bottom: var(--space-5);
     max-width: 36rem;
+    text-wrap: pretty;
   }
-
-  .contato__placeholder {
-    background: rgba(250, 247, 242, 0.1);
-    border: 1px solid rgba(250, 247, 242, 0.18);
-    border-radius: var(--radius-md);
-    padding: 0.9rem 1rem;
-    margin-bottom: var(--space-5);
-    font-size: var(--fs-small);
-    color: var(--rose-100);
-  }
-
 
   .contato__side {
     display: grid;
@@ -140,10 +128,16 @@ const wa = whatsappUrl();
   }
 
   .contato__photo :global(picture),
-  .contato__photo :global(img) {
+  .contato__photo :global(img),
+  .photo-parallax {
     width: 100%;
     height: 100%;
     display: block;
+  }
+
+  .photo-parallax {
+    transform: scale(1.08);
+    will-change: transform;
   }
 
   .contato__img {
@@ -189,22 +183,10 @@ const wa = whatsappUrl();
     .contato {
       grid-template-columns: 1fr;
     }
+    .contato__photo {
+      max-width: 22rem;
+      margin-inline: auto;
+      width: 100%;
+    }
   }
 </style>
-
-<script define:vars={{ isPlaceholder: site.whatsappIsPlaceholder }}>
-  if (isPlaceholder) {
-    document.querySelectorAll('[data-wa-cta]').forEach((el) => {
-      el.addEventListener('click', () => {
-        const href = el.getAttribute('href') || '';
-        if (href.startsWith('#') || href.includes('XXXXXXXX')) {
-          const note = document.querySelector('.contato__placeholder');
-          if (note) {
-            note.setAttribute('tabindex', '-1');
-            note.focus();
-          }
-        }
-      });
-    });
-  }
-</script>

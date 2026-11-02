@@ -11,7 +11,6 @@ import {
   initKinetic,
   initHorizon,
   initHeroZoom,
-  initEmblemPath,
   initNightTheme,
   initRevealFooter,
   initRgbHover,
@@ -19,6 +18,7 @@ import {
   initSharedMorph,
   forceRevealsInView,
 } from './effects-v6';
+import { initV8, initEmblemPathV8, initFaqSmooth, setRouteCurtainTheme } from './effects-v8';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -83,6 +83,9 @@ function destroyMotion() {
 }
 
 function splitHeadlines() {
+  document.querySelectorAll<HTMLElement>('h1.page-title, h1.section__title, h2.section__title').forEach((el) => {
+    if (!el.hasAttribute('data-split') && !el.hasAttribute('data-flip')) el.setAttribute('data-split', '');
+  });
   document.querySelectorAll<HTMLElement>('[data-split]').forEach((el) => {
     if (el.dataset.splitDone) return;
     const text = el.textContent?.trim() || '';
@@ -408,15 +411,7 @@ function initCardTilt() {
 }
 
 function initFaq() {
-  document.querySelectorAll<HTMLDetailsElement>('.faq__item').forEach((item) => {
-    const body = item.querySelector<HTMLElement>('.faq__body');
-    if (!body) return;
-    const sync = () => {
-      if (reduceMotion()) return;
-      if (item.open) gsap.fromTo(body, { height: 0, opacity: 0.4 }, { height: 'auto', opacity: 1, duration: 0.35 });
-    };
-    on(item, 'toggle', sync);
-  });
+  /* replaced by initFaqSmooth in effects-v8 */
 }
 
 function initMarquee() {
@@ -555,7 +550,7 @@ async function runPageMotion(opts: { withPreloader: boolean }) {
   if (reduceMotion()) {
     revealAllStatic();
     initHeader();
-    initFaq();
+    initFaqSmooth(cleanups);
     initWaPlaceholder();
     return;
   }
@@ -575,7 +570,7 @@ async function runPageMotion(opts: { withPreloader: boolean }) {
   initComoPin();
   initMagneticButtons();
   initCardTilt();
-  initFaq();
+  initFaqSmooth(cleanups);
   initMarquee();
   initParallaxDecor();
   initBigType();
@@ -588,12 +583,13 @@ async function runPageMotion(opts: { withPreloader: boolean }) {
   initKinetic(cleanups);
   initHorizon(cleanups);
   initHeroZoom(cleanups);
-  initEmblemPath(cleanups);
+  initEmblemPathV8(cleanups);
   initNightTheme(cleanups);
   initRevealFooter(cleanups);
   initRgbHover(cleanups);
   void initWebGL(cleanups);
   initSharedMorph(cleanups);
+  initV8(cleanups);
   initWaPlaceholder();
   syncHeaderHeight();
   on(window, 'resize', syncHeaderHeight, { passive: true });
@@ -607,6 +603,7 @@ async function runPageMotion(opts: { withPreloader: boolean }) {
 function playCurtainCover(): Promise<void> {
   const curtain = document.querySelector<HTMLElement>('[data-page-curtain]');
   if (!curtain || reduceMotion()) return Promise.resolve();
+  setRouteCurtainTheme();
   const a = curtain.querySelector('.page-curtain__panel--a');
   const b = curtain.querySelector('.page-curtain__panel--b');
   const mark = curtain.querySelector('.page-curtain__mark');

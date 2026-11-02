@@ -1,5 +1,5 @@
 /**
- * Dados reais confirmados + placeholders marcados.
+ * Dados reais confirmados + placeholders marcados (somente no código).
  * Substitua os PLACEHOLDERs quando a cliente enviar os dados.
  */
 
@@ -25,7 +25,7 @@ export const site = {
   /**
    * PLACEHOLDER — número real ainda não informado pela cliente.
    * Formato E.164 sem + (ex.: 5531999999999).
-   * Enquanto for placeholder, o botão de WhatsApp abre um aviso amigável.
+   * Enquanto for placeholder, CTAs de WhatsApp caem no Instagram (silencioso).
    */
   whatsapp: '55319XXXXXXXX',
   whatsappIsPlaceholder: true,
@@ -41,8 +41,21 @@ export const site = {
   ],
 } as const;
 
+/** WhatsApp real, ou Instagram se o número ainda for placeholder (sem aviso ao visitante). */
 export function whatsappUrl(message = site.whatsappDefaultMessage): string {
-  if (site.whatsappIsPlaceholder) return '#contato';
+  if (site.whatsappIsPlaceholder) return site.instagram.url;
   const text = encodeURIComponent(message);
   return `https://wa.me/${site.whatsapp}?text=${text}`;
+}
+
+export function primaryContactUrl(): string {
+  return site.whatsappIsPlaceholder ? site.instagram.url : whatsappUrl();
+}
+
+export function primaryContactLabel(): string {
+  return site.whatsappIsPlaceholder ? `Instagram ${site.instagram.handle}` : 'WhatsApp';
+}
+
+export function primaryContactIsWhatsApp(): boolean {
+  return !site.whatsappIsPlaceholder;
 }

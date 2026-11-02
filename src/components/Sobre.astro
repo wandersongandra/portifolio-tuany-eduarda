@@ -34,22 +34,8 @@ import sobrePhoto from '../assets/photos/tuany-sobre.jpg';
           <dd>Atendimento domiciliar em {site.city}</dd>
         </div>
       </dl>
-    </div>
 
-    <aside class="sobre__aside">
-      <figure class="sobre__photo reveal clip-reveal" data-distort-photo data-rgb-hover>
-        <Portrait
-          src={sobrePhoto}
-          alt="Tuany Eduarda, fisioterapeuta, em retrato editorial de corpo inteiro"
-          widths={[320, 480, 640, 800, 1200]}
-          sizes="(max-width: 900px) min(92vw, 28rem), min(36vw, 28rem)"
-          loading="lazy"
-          objectPosition="50% 12%"
-          class="sobre__img"
-        />
-        <figcaption class="sr-only">Retrato profissional de {site.name}</figcaption>
-      </figure>
-
+      <!-- panel-after-creds -->
       <div class="sobre__panel reveal clip-reveal" aria-label="Resumo profissional">
         <div class="sobre__panel-inner">
           <p class="sobre__panel-label">Em destaque</p>
@@ -73,6 +59,24 @@ import sobrePhoto from '../assets/photos/tuany-sobre.jpg';
           </p>
         </div>
       </div>
+    </div>
+
+    <aside class="sobre__aside">
+      <figure class="sobre__photo reveal clip-reveal" data-distort-photo data-rgb-hover data-photo-tilt>
+        <div class="photo-parallax" data-photo-inner>
+        <Portrait
+          src={sobrePhoto}
+          alt="Tuany Eduarda, fisioterapeuta, em retrato editorial de corpo inteiro"
+          widths={[320, 480, 640, 800, 1200]}
+          sizes="(max-width: 900px) min(92vw, 28rem), min(36vw, 28rem)"
+          loading="lazy"
+          objectPosition="50% 12%"
+          class="sobre__img"
+        />
+        </div>
+        <figcaption class="sr-only">Retrato profissional de {site.name}</figcaption>
+      </figure>
+
     </aside>
   </div>
 </section>
@@ -128,6 +132,16 @@ import sobrePhoto from '../assets/photos/tuany-sobre.jpg';
     box-shadow: var(--shadow-lift);
     border: 1px solid var(--line);
   }
+  @media (min-width: 901px) {
+    .sobre__photo {
+      position: sticky;
+      top: calc(var(--header-h, 4.25rem) + 1rem);
+      z-index: 1;
+    }
+    .sobre__aside {
+      align-content: start;
+    }
+  }
 
   .sobre__photo :global(picture),
   .sobre__photo :global(img) {
@@ -141,6 +155,16 @@ import sobrePhoto from '../assets/photos/tuany-sobre.jpg';
     height: 100%;
     object-fit: cover;
     object-position: 50% 12%;
+  }
+  .photo-parallax {
+    width: 100%;
+    height: 100%;
+    transform: scale(1.08);
+    will-change: transform;
+  }
+
+  .sobre__copy .sobre__panel {
+    margin-top: var(--space-6);
   }
 
   .sobre__panel-inner {
