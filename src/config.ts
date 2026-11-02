@@ -1,13 +1,12 @@
 /**
- * Dados reais confirmados + placeholders marcados (somente no código).
- * Substitua os PLACEHOLDERs quando a cliente enviar os dados.
+ * Dados reais confirmados. Não inventar bairros, preços ou resultados.
  */
 
 export const site = {
   name: 'Tuany Eduarda',
   title: 'Tuany Eduarda | Fisioterapeuta — Atendimento Domiciliar em BH',
   description:
-    'Fisioterapeuta em Belo Horizonte (CREFITO 361871-F), pós-graduada em Geriatria e Gerontologia. Atendimento domiciliar, fisioterapia em idosos, DTM e DOF.',
+    'Fisioterapeuta em Belo Horizonte (CREFITO 361871-F), pós-graduada em Geriatria e Gerontologia. Atendimento domiciliar: fisioterapia para idosos, treino funcional, pilates, drenagem linfática e tratamento para DTM.',
   locale: 'pt-BR',
   // Domínio provisório até a publicação — robots com noindex.
   url: 'https://tuanyeduarda.example.com',
@@ -22,22 +21,20 @@ export const site = {
     handle: '@fisiotuanyeduarda',
     url: 'https://www.instagram.com/fisiotuanyeduarda/',
   },
-  /**
-   * PLACEHOLDER — número real ainda não informado pela cliente.
-   * Formato E.164 sem + (ex.: 5531999999999).
-   * Enquanto for placeholder, CTAs de WhatsApp caem no Instagram (silencioso).
-   */
-  whatsapp: '55319XXXXXXXX',
-  whatsappIsPlaceholder: true,
-  whatsappDefaultMessage:
-    'Olá, Tuany! Vi seu site e gostaria de saber mais sobre o atendimento domiciliar.',
+  /** E.164 sem +. Número real confirmado no flyer oficial. */
+  whatsapp: '5537998350405',
+  whatsappDisplay: '(37) 99835-0405',
+  whatsappIsPlaceholder: false,
+  whatsappDefaultMessage: 'Olá, Tuany! Gostaria de agendar um atendimento.',
   keywords: [
     'fisioterapeuta domiciliar BH',
     'fisioterapia para idosos BH',
     'fisioterapia DTM BH',
     'fisioterapeuta Belo Horizonte',
     'fisioterapia geriátrica BH',
-    'dor orofacial BH',
+    'treino funcional domiciliar BH',
+    'pilates domiciliar BH',
+    'drenagem linfática BH',
   ],
 } as const;
 

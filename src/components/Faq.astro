@@ -1,4 +1,8 @@
 ---
+import { site, primaryContactIsWhatsApp } from '../config';
+const waLabel = primaryContactIsWhatsApp()
+  ? `WhatsApp ${site.whatsappDisplay}`
+  : `Instagram ${site.instagram.handle}`;
 const faqs = [
   {
     q: 'O atendimento é só em casa?',
@@ -6,11 +10,11 @@ const faqs = [
   },
   {
     q: 'Quais públicos são atendidos?',
-    a: 'Há atuação em fisioterapia para idosos (geriatria e gerontologia) e em disfunção temporomandibular (DTM) e dor orofacial (DOF). A adequação ao caso é definida após avaliação.',
+    a: 'Há duas frentes distintas: fisioterapia para idosos (com formação em Geriatria e Gerontologia) e tratamento da disfunção temporomandibular (DTM) e dor orofacial, para adultos. Também há treino funcional, pilates e drenagem linfática, conforme avaliação. A adequação ao caso é definida após avaliação.',
   },
   {
     q: 'Como agendar uma avaliação?',
-    a: 'Pelo Instagram @fisiotuanyeduarda. Informe o motivo do cuidado e a região em Belo Horizonte para combinarmos a avaliação.',
+    a: `Pelo ${waLabel} ou pelo Instagram ${site.instagram.handle}. Informe o motivo do cuidado e a região em Belo Horizonte para combinarmos a avaliação.`,
   },
   {
     q: 'Vocês publicam preços ou resultados garantidos?',
@@ -18,7 +22,7 @@ const faqs = [
   },
   {
     q: 'Qual é o registro profissional?',
-    a: 'CREFITO 361871-F. A profissional é pós-graduada em Geriatria e Gerontologia.',
+    a: `CREFITO ${site.crefito}. A profissional é pós-graduada em Geriatria e Gerontologia. O tratamento para DTM é uma frente de atuação distinta dessa formação.`,
   },
 ];
 ---

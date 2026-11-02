@@ -926,23 +926,47 @@ body {
   .logo-badge-orb__spin { animation: none; }
 }
 
+/* Badge on PHOTO — desk: top-right under Geriatria float; mob: mid-photo above chip */
 .hero-badge-float {
   position: absolute;
-  right: clamp(-0.25rem, 1.5vw, 0.75rem);
-  bottom: clamp(-0.5rem, 1.5vw, 0.25rem);
+  right: clamp(-0.35rem, 1.2vw, 0.5rem);
+  top: clamp(3.25rem, 5vw, 4.25rem);
+  bottom: auto;
   z-index: 3;
-  /* clear of Geriatria tag (now top-left) and chip */
 }
 @media (max-width: 900px) {
   .hero-badge-float {
-    right: 0;
-    bottom: -0.25rem;
+    right: 0.2rem;
+    top: auto;
+    /* Sit fully on the photo, clear of CREFITO / Atendimento chip */
+    bottom: 8.15rem;
   }
   .hero-badge-float .logo-badge-orb {
-    width: 6.25rem;
-    height: 6.25rem;
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+  .hero-frame__chip {
+    padding-right: 0.75rem;
   }
 }
+@media (max-width: 360px) {
+  .hero-badge-float {
+    right: 0.15rem;
+    top: auto;
+    bottom: 8.35rem;
+  }
+  .hero-badge-float .logo-badge-orb {
+    width: 3.85rem;
+    height: 3.85rem;
+  }
+}
+
+/* v9d: hero stays in normal flow (no ScrollTrigger pin leftovers) */
+main#conteudo > .pin-spacer:has(> .hero) {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
 
 .footer-badge {
   width: 7.5rem;

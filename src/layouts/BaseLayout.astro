@@ -33,6 +33,7 @@ const jsonLd = {
       url: site.url,
       image: ogImage,
       medicalSpecialty: ['Geriatric', 'Physiotherapy'],
+      telephone: site.whatsappIsPlaceholder ? undefined : `+${site.whatsapp}`,
       areaServed: {
         '@type': 'City',
         name: site.city,
@@ -54,6 +55,16 @@ const jsonLd = {
         name: 'CREFITO',
         value: site.crefito,
       },
+      knowsAbout: [
+        'Fisioterapia para idosos',
+        'Geriatria e Gerontologia',
+        'Treino funcional',
+        'Pilates',
+        'Drenagem linfática',
+        'Disfunção temporomandibular (DTM)',
+        'Dor orofacial',
+        'Atendimento domiciliar',
+      ],
     },
     {
       '@type': 'WebSite',

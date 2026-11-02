@@ -1,6 +1,8 @@
 ---
-import { site } from '../config';
+import { site, whatsappUrl, primaryContactIsWhatsApp } from '../config';
 const year = new Date().getFullYear();
+const showWa = primaryContactIsWhatsApp();
+const wa = whatsappUrl();
 ---
 
 <div class="footer-spacer" data-footer-spacer aria-hidden="true"></div>
@@ -34,7 +36,12 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="site-footer__social">
-      <p class="site-footer__label">Redes</p>
+      <p class="site-footer__label">Contato</p>
+      {showWa && (
+        <a href={wa} rel="noopener noreferrer" target="_blank">
+          WhatsApp {site.whatsappDisplay}
+        </a>
+      )}
       <a href={site.instagram.url} rel="noopener noreferrer" target="_blank">
         Instagram {site.instagram.handle}
       </a>

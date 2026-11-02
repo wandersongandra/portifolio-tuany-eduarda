@@ -70,6 +70,21 @@ function destroyMotion() {
     try { fn(); } catch {}
   });
   ScrollTrigger.getAll().forEach((st) => st.kill());
+  // Orphan GSAP pin-spacers (esp. after ClientRouter) push the hero down
+  document.querySelectorAll('.pin-spacer').forEach((spacer) => {
+    const child = spacer.firstElementChild;
+    if (child) spacer.parentElement?.insertBefore(child, spacer);
+    spacer.remove();
+  });
+  document.querySelectorAll<HTMLElement>('.hero').forEach((hero) => {
+    hero.style.position = '';
+    hero.style.top = '';
+    hero.style.left = '';
+    hero.style.width = '';
+    hero.style.zIndex = '';
+    hero.style.transform = '';
+    hero.style.margin = '';
+  });
   if (tickerLenis) {
     gsap.ticker.remove(tickerLenis);
     tickerLenis = null;

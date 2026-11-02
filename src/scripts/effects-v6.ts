@@ -234,30 +234,30 @@ export function initHorizon(cleanups: Clean[]) {
 }
 
 export function initHeroZoom(cleanups: Clean[]) {
+  // v9d: NEVER pin the hero — pin+pinSpacing at scroll 0 left a huge cream gap
+  // under the header (pin-spacer / fixed mis-measure). Soft scrub zoom only.
   if (reduce() || mobile()) return;
   const hero = document.querySelector<HTMLElement>('.hero');
   if (!hero) return;
   const inner = hero.querySelector<HTMLElement>('.hero__grid') || hero;
-  const headerOffset = () => {
-    const header = document.querySelector<HTMLElement>('.site-header');
-    return header ? Math.ceil(header.getBoundingClientRect().height) : 68;
-  };
+  // Ensure no leftover pin/transform from a prior ClientRouter visit
+  gsap.set(hero, { clearProps: 'position,top,left,width,zIndex,margin,padding,transform' });
+  gsap.set(inner, { clearProps: 'transform' });
   const st = ScrollTrigger.create({
     trigger: hero,
-    start: () => `top top+=${headerOffset()}`,
-    end: '+=45%',
+    start: 'top top',
+    end: 'bottom top',
     scrub: true,
-    pin: true,
-    pinSpacing: true,
-    anticipatePin: 1,
+    pin: false,
     onUpdate: (self) => {
-      const s = 1 + self.progress * 0.1;
+      const s = 1 + self.progress * 0.06;
       gsap.set(inner, { scale: s, transformOrigin: '50% 40%' });
     },
   });
   cleanups.push(() => {
     st.kill();
     gsap.set(inner, { clearProps: 'transform' });
+    gsap.set(hero, { clearProps: 'position,top,left,width,zIndex,margin,padding,transform' });
   });
 }
 

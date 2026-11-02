@@ -7,14 +7,14 @@ import { services } from '../../data/services';
 ---
 <BaseLayout
   title={`Serviços | ${site.name} — Fisioterapeuta`}
-  description="Atendimento domiciliar, fisioterapia geriátrica, DTM e dor orofacial (DOF) em Belo Horizonte."
+  description="Atendimento domiciliar em Belo Horizonte: fisioterapia para idosos, treino funcional, pilates, drenagem linfática e tratamento para DTM."
   canonicalPath="/servicos/">
   <Header />
   <main id="conteudo" class="page-main">
     <header class="page-hero container" data-shared-hero>
       <p class="eyebrow">Serviços</p>
       <h1 class="page-title section__title" data-flip>Cuidado especializado, perto de você</h1>
-      <p class="section__lead">Quatro frentes de atendimento, sempre com escuta atenta e um plano feito para cada pessoa.</p>
+      <p class="section__lead">Cinco frentes de atendimento domiciliar — cuidado personalizado no conforto da sua casa —, sempre com escuta atenta e um plano feito para cada pessoa.</p>
     </header>
 
     <div class="stack-wrap">
@@ -38,6 +38,9 @@ import { services } from '../../data/services';
     <div class="container section section--tight">
       <p class="servicos__ethics">
         O tratamento é definido após uma avaliação individual, de acordo com as necessidades de cada paciente.
+      </p>
+      <p class="servicos__tagline">
+        Mais autonomia, mobilidade, saúde e qualidade de vida.
       </p>
       <p style="text-align:center;margin-top:1.5rem">
         <a class="btn btn--primary" href="/contato/">Falar sobre o seu caso</a>
@@ -145,4 +148,12 @@ import { services } from '../../data/services';
     box-shadow: var(--shadow-lift);
   }
   .page-hero .section__lead { max-width: 36rem; }
+  .servicos__tagline {
+    text-align: center;
+    margin-top: 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+    color: var(--rose-dark);
+    font-weight: 550;
+  }
 </style>

@@ -5,7 +5,8 @@ interface Props {
   teaser?: boolean;
 }
 const { teaser = false } = Astro.props;
-const list = teaser ? services.slice(0, 3) : services;
+/** Home shows all five flyer fronts; full page uses the same list. */
+const list = services;
 ---
 
 <section class="section section--alt" id="servicos" data-bg="sage" aria-labelledby="servicos-title">
@@ -13,24 +14,20 @@ const list = teaser ? services.slice(0, 3) : services;
     <header class="section__header section__header--center reveal">
       <p class="eyebrow" style="justify-content:center">Serviços</p>
       <h2 class="section__title split-headline" id="servicos-title" data-split>
-        Cuidado especializado, perto de você
+        Cuidado personalizado no conforto da sua casa
       </h2>
       <p class="section__lead">
-        Cuidado individualizado, no conforto de casa, com atenção à mobilidade,
-        ao equilíbrio e ao bem-estar no dia a dia.
+        Cinco frentes de atendimento domiciliar — fisioterapia para idosos,
+        treino funcional, pilates, drenagem linfática e tratamento para DTM —
+        com escuta atenta e plano feito para cada pessoa.
       </p>
     </header>
 
-    <div class={`grid ${list.length > 3 ? 'grid--2' : 'grid--3'}`} data-stagger>
+    <div class="grid grid--2" data-stagger>
       {list.map((s) => (
         <article class="card" data-card data-tilt data-cursor="Ver" data-rgb-hover>
           <span class="card__glow" aria-hidden="true"></span>
           <div class="card__icon" aria-hidden="true">
-            {s.icon === 'home' && (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-                <path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5z"/>
-              </svg>
-            )}
             {s.icon === 'elder' && (
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
                 <circle cx="12" cy="7" r="3"/>
@@ -38,7 +35,24 @@ const list = teaser ? services.slice(0, 3) : services;
                 <path d="M9 14.5 7.5 18M15 14.5 16.5 18"/>
               </svg>
             )}
-            {(s.icon === 'jaw' || s.icon === 'face') && (
+            {s.icon === 'strength' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M6 9v6M18 9v6M4 11v2M20 11v2M8 12h8M6 9h2a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H6M18 9h-2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h2"/>
+              </svg>
+            )}
+            {s.icon === 'mat' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <rect x="4" y="7" width="16" height="10" rx="2"/>
+                <path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h0A1.5 1.5 0 0 1 11 5.5V7"/>
+              </svg>
+            )}
+            {s.icon === 'lymph' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <path d="M8 10c0-2 1.5-4 4-5.5C14.5 6 16 8 16 10c0 2.5-2 4.5-4 6.5-2-2-4-4-4-6.5z"/>
+                <path d="M7 18h10M9 20h6"/>
+              </svg>
+            )}
+            {s.icon === 'jaw' && (
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
                 <path d="M8 10c0-2.2 1.8-4 4-4s4 1.8 4 4"/>
                 <path d="M7 14c1.2 2.2 2.8 3.5 5 3.5s3.8-1.3 5-3.5"/>
@@ -61,6 +75,9 @@ const list = teaser ? services.slice(0, 3) : services;
       </p>
     )}
 
+    <p class="servicos__tagline">
+      Mais autonomia, mobilidade, saúde e qualidade de vida.
+    </p>
     <p class="servicos__ethics">
       O tratamento é definido após uma avaliação individual, de acordo com as necessidades de cada paciente.
     </p>
@@ -69,12 +86,20 @@ const list = teaser ? services.slice(0, 3) : services;
 
 <style>
   .servicos__ethics {
-    margin-top: var(--space-6);
+    margin-top: 0.75rem;
     text-align: center;
     max-width: 46rem;
     font-size: var(--fs-small);
     color: var(--ink-muted);
     margin-inline: auto;
+  }
+  .servicos__tagline {
+    margin-top: var(--space-6);
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+    color: var(--rose-dark);
+    font-weight: 550;
   }
   .servicos__more {
     display: flex;
