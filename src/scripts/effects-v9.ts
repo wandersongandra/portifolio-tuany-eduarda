@@ -42,7 +42,11 @@ function ensureBlindImages(stage: HTMLElement) {
   const apply = () => {
     const src = img.currentSrc || img.src;
     if (!src) return;
-    const pos = img.style.objectPosition || '50% 18%';
+    const pos = getComputedStyle(img).objectPosition || img.style.objectPosition || '50% 12%';
+    // Stage BG = duotone “behind” the closed clip regions (no parallax scale)
+    stage.style.backgroundImage = `url("${src}")`;
+    stage.style.backgroundPosition = pos;
+    stage.style.backgroundSize = 'cover';
     stage.querySelectorAll<HTMLElement>('[data-blind-img]').forEach((el) => {
       el.style.backgroundImage = `url("${src}")`;
       el.style.backgroundPosition = pos;
@@ -56,9 +60,17 @@ function ensureBlindImages(stage: HTMLElement) {
   window.setTimeout(apply, 400);
 }
 
+/** clip-path inset side % for a given openness 0–1 (center-open blinds). */
+function blindClip(open: number): string {
+  const o = Math.max(0, Math.min(1, open));
+  const side = ((1 - o) / 2) * 100;
+  return `inset(0 ${side}% 0 ${side}%)`;
+}
+
 /**
- * Image-native blinds: each strip scaleX 0→1 from its center,
- * revealing the photo beneath — never opaque cream/graphite blocks.
+ * Image-native blinds via clip-path (not scaleX — keeps slices aligned).
+ * Behind closed regions: base photo + duotone. Never flat rose.
+ * Openness curve: ~40% at 25% time, ~60% at 50%, ~90% at 75%.
  */
 function openBlinds(
   stage: HTMLElement,
@@ -70,23 +82,23 @@ function openBlinds(
     stage.classList.add('is-open', 'is-color');
     return null;
   }
-  gsap.set(reveals, { scaleX: 0, transformOrigin: '50% 50%' });
+  gsap.set(reveals, { clipPath: blindClip(0.2) });
   const tw = gsap.to(reveals, {
-    scaleX: 1,
-    duration: opts.duration ?? (mobile() ? 0.55 : 0.8),
+    clipPath: blindClip(1),
+    duration: opts.duration ?? (mobile() ? 0.7 : 0.95),
     stagger: {
-      each: opts.stagger ?? (mobile() ? 0.032 : 0.045),
+      each: opts.stagger ?? (mobile() ? 0.028 : 0.038),
       from: opts.from ?? 'center',
     },
-    ease: 'power3.inOut',
+    ease: 'power2.out',
     delay: opts.delay ?? 0,
     onComplete: () => stage.classList.add('is-open'),
   });
   gsap.to(stage.querySelector('.photo-stage__duotone'), {
     opacity: 0,
-    duration: mobile() ? 0.65 : 1.0,
+    duration: mobile() ? 0.7 : 1.0,
     ease: 'power2.out',
-    delay: (opts.delay ?? 0) + 0.2,
+    delay: (opts.delay ?? 0) + 0.15,
     onComplete: () => stage.classList.add('is-color'),
   });
   return tw;
@@ -98,7 +110,7 @@ function showFully(stage: HTMLElement | null | undefined) {
   const duo = stage.querySelector<HTMLElement>('.photo-stage__duotone');
   if (duo) gsap.set(duo, { opacity: 0 });
   const reveals = stage.querySelectorAll<HTMLElement>('[data-blind-reveal]');
-  if (reveals.length) gsap.set(reveals, { scaleX: 1 });
+  if (reveals.length) gsap.set(reveals, { clipPath: blindClip(1) });
 }
 
 /** Vertical image blinds + duotone → natural color (scroll-triggered). */
@@ -130,14 +142,14 @@ export function initSlatReveals(cleanups: Clean) {
       },
     });
     const reveals = stage.querySelectorAll<HTMLElement>('[data-blind-reveal]');
-    gsap.set(reveals, { scaleX: 0, transformOrigin: '50% 50%' });
+    gsap.set(reveals, { clipPath: blindClip(0.2) });
     tw.to(
       reveals,
       {
-        scaleX: 1,
-        duration: mobile() ? 0.55 : 0.85,
-        stagger: { each: mobile() ? 0.03 : 0.042, from: 'center' },
-        ease: 'power3.inOut',
+        clipPath: blindClip(1),
+        duration: mobile() ? 0.7 : 0.95,
+        stagger: { each: mobile() ? 0.028 : 0.036, from: 'center' },
+        ease: 'power2.out',
       },
       0
     );
@@ -148,7 +160,7 @@ export function initSlatReveals(cleanups: Clean) {
         duration: 0.95,
         ease: 'power2.out',
       },
-      0.18
+      0.12
     );
     tw.add(() => stage.classList.add('is-open', 'is-color'));
     cleanups.push(() => tw.kill());
@@ -470,16 +482,29 @@ export function initPhotoBridges(cleanups: Clean) {
     if (!a) return;
     const href = a.getAttribute('href') || '';
     const bridge = a.dataset.photoBridge;
+    const fromStage = !!a.closest('[data-photo-stage]');
+    const isPhotoMorph =
+      bridge === 'sobre' ||
+      bridge === 'contato' ||
+      fromStage ||
+      a.hasAttribute('data-photo-bridge');
     const toSobre = href.includes('/sobre') || bridge === 'sobre';
     const toContato = href.includes('/contato') || bridge === 'contato';
+    if (!toSobre && !toContato) return;
+    if (!isPhotoMorph && !fromStage) return;
+
+    // Skip the grey wipe curtain — morph is photo glide + clean crossfade only
+    document.documentElement.classList.add('is-photo-morph');
+    try { sessionStorage.setItem('tuany-skip-curtain', '1'); } catch { /* ignore */ }
 
     if (toSobre) {
       markMorphDeparture('sobre');
       const src =
         document.querySelector<HTMLElement>('[data-photo-stage="sobre"]') ||
         document.querySelector<HTMLElement>('[data-hero-photo]');
-      setName(src, 'photo-sobre');
-      // Avoid competing page-title morph → ghost overlapping headings
+      // Desktop: shared-element morph. Mobile: quick fade only (no VT photo / no grey wipe).
+      if (!mobile()) setName(src, 'photo-sobre');
+      else if (src) src.style.viewTransitionName = 'none';
       document.querySelectorAll<HTMLElement>('.page-title, [data-split]').forEach((el) => {
         el.style.viewTransitionName = 'none';
       });
@@ -490,7 +515,8 @@ export function initPhotoBridges(cleanups: Clean) {
     if (toContato) {
       markMorphDeparture('contato');
       const src = document.querySelector<HTMLElement>('[data-photo-stage="contato"]');
-      setName(src, 'photo-contato');
+      if (!mobile()) setName(src, 'photo-contato');
+      else if (src) src.style.viewTransitionName = 'none';
       document.querySelectorAll<HTMLElement>('.page-title, [data-split]').forEach((el) => {
         el.style.viewTransitionName = 'none';
       });

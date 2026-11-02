@@ -1,9 +1,9 @@
 ---
 /**
- * Narrative photo stage (v9b):
+ * Narrative photo stage (v9c):
  * - Hero: no slats — circle mask driven in JS only.
- * - Sobre/Contato: image-native blinds (each strip reveals the photo via
- *   scaleX from strip center). Never opaque cream/graphite overlay blocks.
+ * - Sobre/Contato: 8–10 image blinds via clip-path (no scaleX — keeps photo aligned).
+ *   Base + duotone always visible behind closed regions (never flat rose).
  */
 interface Props {
   role: 'hero' | 'sobre' | 'contato';
@@ -22,7 +22,7 @@ const {
   slats = 9,
 } = Astro.props;
 const useBlinds = role !== 'hero';
-const stripCount = Math.max(5, Math.min(14, slats));
+const stripCount = Math.max(8, Math.min(10, slats));
 ---
 
 {href ? (
@@ -90,6 +90,7 @@ const stripCount = Math.max(5, Math.min(14, slats));
     width: 100%;
     height: 100%;
     border-radius: inherit;
+    background: #3f4042;
   }
   .photo-stage__media {
     position: relative;
@@ -103,23 +104,22 @@ const stripCount = Math.max(5, Math.min(14, slats));
     inset: 0;
     width: 100%;
     height: 100%;
-  }
-  /* While blinds animate, hide the full base so only strip windows show photo */
-  .photo-stage:not(.is-open):not(.photo-stage--hero) .photo-stage__base {
+    /* Hidden while blinds run — parallax scale(1.08) would misalign vs strip BGs.
+       Behind closed clips = stage background-image (set in JS) + duotone. */
     opacity: 0;
+    z-index: 0;
   }
-  .photo-stage.is-open .photo-stage__base,
-  .photo-stage--hero .photo-stage__base {
+  .photo-stage.is-open .photo-stage__base {
     opacity: 1;
   }
   .photo-stage__duotone {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 2;
+    z-index: 1;
     mix-blend-mode: color;
     background:
-      linear-gradient(180deg, rgba(201, 151, 143, 0.55), rgba(63, 64, 66, 0.45));
+      linear-gradient(180deg, rgba(201, 151, 143, 0.62), rgba(63, 64, 66, 0.5));
     opacity: 1;
   }
   .photo-stage.is-color .photo-stage__duotone {
@@ -128,9 +128,10 @@ const stripCount = Math.max(5, Math.min(14, slats));
   .photo-stage__blinds {
     position: absolute;
     inset: 0;
-    z-index: 1;
+    z-index: 2;
     display: grid;
     grid-template-columns: repeat(var(--sn, 9), 1fr);
+    gap: 0;
     pointer-events: none;
   }
   .photo-stage.is-open .photo-stage__blinds {
@@ -144,16 +145,14 @@ const stripCount = Math.max(5, Math.min(14, slats));
   .photo-stage__blind-reveal {
     position: absolute;
     inset: 0;
-    transform: scaleX(0);
-    transform-origin: 50% 50%;
-    overflow: hidden;
-    will-change: transform;
+    /* Start ~20% open at center — face peeks; JS animates clip-path */
+    clip-path: inset(0 40% 0 40%);
+    will-change: clip-path;
   }
   .photo-stage__blind-img {
     position: absolute;
     top: 0;
     height: 100%;
-    /* Full-stage width so each strip shows the correct slice of the photo */
     width: calc(var(--sn, 9) * 100%);
     left: calc(var(--si, 0) * -100%);
     background-size: cover;
@@ -165,8 +164,5 @@ const stripCount = Math.max(5, Math.min(14, slats));
   }
   :global(.motion-reduced) .photo-stage__blinds {
     display: none !important;
-  }
-  :global(.motion-reduced) .photo-stage__base {
-    opacity: 1 !important;
   }
 </style>

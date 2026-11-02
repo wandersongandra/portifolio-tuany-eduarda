@@ -290,6 +290,21 @@ function initSectionReveals() {
 
 function initSplitReveals() {
   document.querySelectorAll('.split-line__inner').forEach((el) => {
+    if (isMobile()) {
+      // yPercent + overflow:hidden clips wrapped lines and can stack-ghost on narrow screens
+      gsap.fromTo(
+        el,
+        { opacity: 0, y: 12 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.55,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: el, start: 'top 94%', once: true },
+        }
+      );
+      return;
+    }
     gsap.fromTo(
       el,
       { yPercent: 110 },
@@ -297,7 +312,7 @@ function initSplitReveals() {
         yPercent: 0,
         duration: 0.95,
         ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: isMobile() ? 'top 92%' : 'top 90%', once: true },
+        scrollTrigger: { trigger: el, start: 'top 90%', once: true },
       }
     );
   });
@@ -448,8 +463,33 @@ function initParallaxDecor() {
 
 function initBigType() {
   const fill = document.querySelector<HTMLElement>('[data-big-fill] .big-type__fill');
-  const section = document.querySelector('[data-big-type]');
-  if (!fill || !section || reduceMotion() || isMobile()) return;
+  const section = document.querySelector<HTMLElement>('[data-big-type]');
+  if (!section) return;
+
+  // Once Sobre reaches the header, fully tuck big-type away (kills graphite band under header)
+  const sobre = document.querySelector<HTMLElement>('#sobre, [data-sobre-section]');
+  if (sobre) {
+    ScrollTrigger.create({
+      trigger: sobre,
+      start: () => {
+        const header = document.querySelector<HTMLElement>('.site-header');
+        const hh = header ? Math.ceil(header.getBoundingClientRect().height) : 68;
+        return `top top+=${hh}`;
+      },
+      onEnter: () => {
+        section.style.visibility = 'hidden';
+        section.style.pointerEvents = 'none';
+        section.setAttribute('aria-hidden', 'true');
+      },
+      onLeaveBack: () => {
+        section.style.visibility = '';
+        section.style.pointerEvents = '';
+        section.removeAttribute('aria-hidden');
+      },
+    });
+  }
+
+  if (!fill || reduceMotion() || isMobile()) return;
   gsap.fromTo(
     fill,
     { clipPath: 'inset(0 100% 0 0)' },
@@ -614,7 +654,62 @@ async function runPageMotion(opts: { withPreloader: boolean }) {
   requestAnimationFrame(() => ScrollTrigger.refresh());
 }
 
+function shouldSkipCurtain(): boolean {
+  try {
+    if (sessionStorage.getItem('tuany-skip-curtain') === '1') return true;
+  } catch { /* ignore */ }
+  return document.documentElement.classList.contains('is-photo-morph');
+}
+
+function clearSkipCurtain() {
+  document.documentElement.classList.remove('is-photo-morph');
+  try { sessionStorage.removeItem('tuany-skip-curtain'); } catch { /* ignore */ }
+}
+
+/** Quick soft fade for photo morphs — no wipe circle, no panels, no emblem mark. */
+function playMorphFadeCover(): Promise<void> {
+  const curtain = document.querySelector<HTMLElement>('[data-page-curtain]');
+  if (!curtain) return Promise.resolve();
+  const a = curtain.querySelector('.page-curtain__panel--a');
+  const b = curtain.querySelector('.page-curtain__panel--b');
+  const mark = curtain.querySelector('.page-curtain__mark');
+  const wipe = curtain.querySelector('.page-curtain__wipe');
+  // Keep wipe/panels/mark hard-hidden so no grey circle or full-screen grey
+  gsap.set([wipe, mark], { opacity: 0, scale: 0 });
+  gsap.set([a, b], { scaleY: 0, opacity: 0 });
+  curtain.classList.add('is-active', 'is-morph-fade');
+  curtain.style.background = 'transparent';
+  return new Promise((resolve) => {
+    // Tiny pause only — photo VT / crossfade carries the visual
+    window.setTimeout(resolve, 40);
+  });
+}
+
+function playMorphFadeReveal(): Promise<void> {
+  const curtain = document.querySelector<HTMLElement>('[data-page-curtain]');
+  if (!curtain) {
+    clearSkipCurtain();
+    return Promise.resolve();
+  }
+  return new Promise((resolve) => {
+    window.setTimeout(() => {
+      curtain.classList.remove('is-active', 'is-morph-fade');
+      curtain.style.background = '';
+      const a = curtain.querySelector('.page-curtain__panel--a');
+      const b = curtain.querySelector('.page-curtain__panel--b');
+      const mark = curtain.querySelector('.page-curtain__mark');
+      const wipe = curtain.querySelector('.page-curtain__wipe');
+      gsap.set([a, b], { scaleY: 0, opacity: 1 });
+      gsap.set(mark, { opacity: 0, scale: 0.85 });
+      gsap.set(wipe, { scale: 0, opacity: 0 });
+      clearSkipCurtain();
+      resolve();
+    }, 60);
+  });
+}
+
 function playCurtainCover(): Promise<void> {
+  if (shouldSkipCurtain()) return playMorphFadeCover();
   const curtain = document.querySelector<HTMLElement>('[data-page-curtain]');
   if (!curtain || reduceMotion()) return Promise.resolve();
   setRouteCurtainTheme();
@@ -633,6 +728,9 @@ function playCurtainCover(): Promise<void> {
 }
 
 function playCurtainReveal(): Promise<void> {
+  if (shouldSkipCurtain() || document.querySelector('.page-curtain.is-morph-fade')) {
+    return playMorphFadeReveal();
+  }
   const curtain = document.querySelector<HTMLElement>('[data-page-curtain]');
   if (!curtain || reduceMotion()) return Promise.resolve();
   const a = curtain.querySelector('.page-curtain__panel--a');

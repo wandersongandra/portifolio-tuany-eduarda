@@ -14,19 +14,24 @@
 <style>
   .big-type {
     position: relative;
-    height: 120vh;
+    z-index: 0;
+    height: 100vh;
     background: var(--graphite-950);
     color: var(--cream);
+    overflow: clip;
+    isolation: isolate;
   }
   .big-type__sticky {
     position: sticky;
-    top: 0;
-    height: 100vh;
+    /* Stick BELOW fixed header so no graphite band peeks under it */
+    top: var(--header-h, 4.25rem);
+    height: calc(100vh - var(--header-h, 4.25rem));
     display: grid;
     place-content: center;
     text-align: center;
     padding: var(--gutter);
     overflow: hidden;
+    background: var(--graphite-950);
   }
   .big-type__eyebrow {
     font-size: var(--fs-eyebrow);
@@ -63,12 +68,18 @@
     .big-type {
       height: auto;
       min-height: 0;
+      /* Hard stop — never paint into the next section on mobile */
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
     }
     .big-type__sticky {
       position: relative;
+      top: auto;
       height: auto;
       min-height: 0;
       padding-block: clamp(3rem, 12vw, 4.75rem);
+      transform: none !important;
     }
     .big-type__fill { clip-path: none !important; }
   }

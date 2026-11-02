@@ -65,6 +65,23 @@
     max-width: none !important;
     object-fit: contain;
   }
+  /* Photo morph: no wipe circle, no panels, no emblem — photo glide + crossfade only */
+  .page-curtain.is-morph-fade {
+    background: transparent !important;
+    opacity: 1;
+  }
+  .page-curtain.is-morph-fade .page-curtain__wipe,
+  .page-curtain.is-morph-fade .page-curtain__panel,
+  .page-curtain.is-morph-fade .page-curtain__mark {
+    display: none !important;
+    opacity: 0 !important;
+    transform: scale(0) !important;
+  }
+  html.is-photo-morph .c-cursor {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .page-curtain { display: none !important; }
   }

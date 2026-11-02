@@ -775,6 +775,15 @@ body {
   overflow: hidden;
   padding-bottom: 0.08em;
 }
+@media (max-width: 900px) {
+  /* split-line mobile wrap: avoid clipping / ghost-stack on multi-line titles */
+  .split-line {
+    overflow: visible;
+  }
+  .split-headline {
+    overflow: visible;
+  }
+}
 
 .split-line__inner {
   display: block;
@@ -1233,6 +1242,35 @@ main#conteudo {
 
 @media (max-width: 900px) {
   :root { --header-h: 3.75rem; }
+}
+
+/* ========== v9c: morph + section stacking ========== */
+.page-curtain.is-morph-fade,
+.page-curtain.is-morph-fade * {
+  pointer-events: none !important;
+}
+html.is-photo-morph .page-curtain__wipe {
+  display: none !important;
+  opacity: 0 !important;
+  transform: scale(0) !important;
+}
+#sobre,
+section[data-sobre-section] {
+  position: relative;
+  z-index: 2;
+  background-color: var(--cream, #F7F3EE);
+}
+@media (max-width: 900px) {
+  [data-big-type] {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+  #sobre,
+  section[data-sobre-section] {
+    z-index: 2;
+    background-color: var(--cream, #F7F3EE);
+  }
 }
 
 /* ========== v8 polish ========== */
