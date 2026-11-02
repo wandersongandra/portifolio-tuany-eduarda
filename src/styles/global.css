@@ -1338,3 +1338,75 @@ html[data-route='contato'] .page-curtain__panel--b { background: #9E6F68; }
     padding-block: clamp(2.5rem, 8vw, 3.75rem);
   }
 }
+
+
+/* ——— v9 photo narrative ——— */
+.photo-slat-field {
+  position: relative;
+}
+.photo-slat-field::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 18px,
+    rgba(63, 64, 66, 0.045) 18px,
+    rgba(63, 64, 66, 0.045) 19px
+  );
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  opacity: 0.9;
+}
+.photo-slat-field > * {
+  position: relative;
+  z-index: 1;
+}
+
+.photo-stage--hero {
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+}
+.photo-stage--sobre,
+.photo-stage--contato {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+/* Hero circle-mask handoff */
+.hero-frame__photo[data-hero-mask] {
+  clip-path: circle(0% at 50% 42%);
+}
+.hero-frame__photo.is-card {
+  clip-path: inset(0% 0% 0% 0% round 1.45rem);
+}
+
+/* Contato CTA-linked photo */
+.contato__photo[data-cta-mask] {
+  clip-path: inset(50% 50% 50% 50% round 999px);
+  opacity: 0.35;
+}
+.contato__photo.is-revealed {
+  clip-path: inset(0% 0% 0% 0% round 1.25rem);
+  opacity: 1;
+}
+
+/* Sobre pin stage (page) */
+.sobre--pin .sobre__photo {
+  will-change: width, height, transform, border-radius;
+}
+.sobre--pin.is-pinned-start .sobre__photo {
+  /* JS drives scrub; CSS fallback */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-frame__photo[data-hero-mask],
+  .contato__photo[data-cta-mask] {
+    clip-path: none !important;
+    opacity: 1 !important;
+  }
+}

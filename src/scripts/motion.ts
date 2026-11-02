@@ -19,6 +19,7 @@ import {
   forceRevealsInView,
 } from './effects-v6';
 import { initV8, initEmblemPathV8, initFaqSmooth, setRouteCurtainTheme } from './effects-v8';
+import { initV9 } from './effects-v9';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -602,6 +603,7 @@ async function runPageMotion(opts: { withPreloader: boolean }) {
   void initWebGL(cleanups);
   initSharedMorph(cleanups);
   initV8(cleanups);
+  initV9(cleanups);
   initWaPlaceholder();
   syncHeaderHeight();
   on(window, 'resize', syncHeaderHeight, { passive: true });

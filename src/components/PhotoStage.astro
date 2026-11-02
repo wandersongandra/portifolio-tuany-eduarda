@@ -1,0 +1,112 @@
+---
+/**
+ * Narrative photo stage: slat blinds, duotone settle, shared-element name.
+ * Does not crop faces — object-position stays on the Portrait.
+ */
+interface Props {
+  role: 'hero' | 'sobre' | 'contato';
+  transitionName?: string;
+  href?: string;
+  cursorLabel?: string;
+  class?: string;
+  slats?: number;
+}
+const {
+  role,
+  transitionName = '',
+  href,
+  cursorLabel,
+  class: className = '',
+  slats = 9,
+} = Astro.props;
+---
+{href ? (
+  <a
+    class:list={['photo-stage', `photo-stage--${role}`, className]}
+    data-photo-stage={role}
+    data-slat-count={slats}
+    href={href}
+    data-cursor={cursorLabel || 'Ver'}
+    transition:name={transitionName || undefined}
+  >
+    <div class="photo-stage__media" data-photo-media>
+      <slot />
+      <div class="photo-stage__duotone" data-photo-duotone aria-hidden="true"></div>
+      <div class="photo-stage__slats" data-photo-slats aria-hidden="true">
+        {Array.from({ length: slats }).map((_, i) => (
+          <span class="photo-stage__slat" style={`--si:${i}; --sn:${slats}`}></span>
+        ))}
+      </div>
+    </div>
+  </a>
+) : (
+  <div
+    class:list={['photo-stage', `photo-stage--${role}`, className]}
+    data-photo-stage={role}
+    data-slat-count={slats}
+    transition:name={transitionName || undefined}
+  >
+    <div class="photo-stage__media" data-photo-media>
+      <slot />
+      <div class="photo-stage__duotone" data-photo-duotone aria-hidden="true"></div>
+      <div class="photo-stage__slats" data-photo-slats aria-hidden="true">
+        {Array.from({ length: slats }).map((_, i) => (
+          <span class="photo-stage__slat" style={`--si:${i}; --sn:${slats}`}></span>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
+
+<style>
+  .photo-stage {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    isolation: isolate;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+  }
+  .photo-stage__media {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: inherit;
+  }
+  .photo-stage__duotone {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    mix-blend-mode: color;
+    background:
+      linear-gradient(180deg, rgba(201, 151, 143, 0.55), rgba(63, 64, 66, 0.45));
+    opacity: 1;
+  }
+  .photo-stage.is-color .photo-stage__duotone {
+    opacity: 0;
+  }
+  .photo-stage__slats {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: repeat(var(--sn, 9), 1fr);
+    pointer-events: none;
+  }
+  .photo-stage__slat {
+    background: var(--cream, #F7F3EE);
+    transform-origin: center top;
+    will-change: transform;
+  }
+  :global(.motion-reduced) .photo-stage__duotone {
+    opacity: 0 !important;
+  }
+  :global(.motion-reduced) .photo-stage__slats {
+    display: none !important;
+  }
+</style>

@@ -3,6 +3,7 @@ import { site, whatsappUrl, primaryContactIsWhatsApp } from '../config';
 import LiquidMesh from './LiquidMesh.astro';
 import WebGLScene from './WebGLScene.astro';
 import Portrait from './Portrait.astro';
+import PhotoStage from './PhotoStage.astro';
 import heroPhoto from '../assets/photos/tuany-hero.jpg';
 import InstagramIcon from './InstagramIcon.astro';
 const wa = whatsappUrl();
@@ -54,6 +55,7 @@ const showWa = primaryContactIsWhatsApp();
             </a>
           )}
           <a class="btn btn--ghost btn--magnetic" href="#servicos">Conhecer os serviços</a>
+          <a class="btn btn--ghost btn--magnetic" href="/sobre/" data-photo-bridge="sobre">Conhecer a Tuany</a>
         </span>
       </div>
       <ul class="hero__badges" aria-label="Áreas de atuação">
@@ -68,19 +70,21 @@ const showWa = primaryContactIsWhatsApp();
       <div class="hero-frame">
         <div class="hero-frame__glow" data-parallax="8"></div>
         <div class="hero-frame__card" data-cursor="Ver">
-          <div class="hero-frame__photo clip-reveal" data-distort-photo data-rgb-hover data-shared-hero data-photo-tilt>
-            <div class="photo-parallax" data-photo-inner>
-            <Portrait
-              src={heroPhoto}
-              alt="Tuany Eduarda, fisioterapeuta, sorrindo"
-              widths={[320, 480, 640, 800, 1200]}
-              sizes="(max-width: 900px) min(88vw, 22rem), 26rem"
-              loading="eager"
-              fetchpriority="high"
-              objectPosition="50% 16%"
-              class="hero-frame__img"
-            />
-            </div>
+          <div class="hero-frame__photo" data-hero-mask data-photo-tilt data-shared-hero data-hero-photo>
+            <PhotoStage role="hero" transitionName="photo-hero" slats={11}>
+              <div class="photo-parallax" data-photo-inner>
+                <Portrait
+                  src={heroPhoto}
+                  alt="Tuany Eduarda, fisioterapeuta, sorrindo"
+                  widths={[320, 480, 640, 800, 1200]}
+                  sizes="(max-width: 900px) min(88vw, 22rem), 26rem"
+                  loading="eager"
+                  fetchpriority="high"
+                  objectPosition="50% 16%"
+                  class="hero-frame__img"
+                />
+              </div>
+            </PhotoStage>
           </div>
           <div class="hero-frame__chip">
             <span>CREFITO {site.crefito}</span>
@@ -90,7 +94,7 @@ const showWa = primaryContactIsWhatsApp();
         <div class="hero-frame__float">
           <span>Geriatria &amp; Gerontologia</span>
         </div>
-        <div class="hero-badge-float" aria-hidden="true">
+        <div class="hero-badge-float" data-hero-badge aria-hidden="true">
           <div class="logo-badge-orb">
             <img class="logo-badge-orb__emblem" src="/brand/logo-emblem.svg" width="176" height="176" alt="" />
             <div class="logo-badge-orb__spin">
@@ -185,6 +189,8 @@ const showWa = primaryContactIsWhatsApp();
     aspect-ratio: 3 / 4;
   }
 
+  .hero-frame__photo :global(.photo-stage),
+  .hero-frame__photo :global(.photo-stage__media),
   .hero-frame__photo :global(picture),
   .hero-frame__photo :global(img) {
     width: 100%;

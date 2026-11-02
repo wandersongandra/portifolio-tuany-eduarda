@@ -1,14 +1,16 @@
 ---
 import { site, whatsappUrl, primaryContactIsWhatsApp } from '../config';
 import Portrait from './Portrait.astro';
+import PhotoStage from './PhotoStage.astro';
 import contatoPhoto from '../assets/photos/tuany-contato.jpg';
 import InstagramIcon from './InstagramIcon.astro';
+const onContatoPage = Astro.url.pathname.replace(/\/+$/, '').endsWith('/contato');
 const wa = whatsappUrl();
 const showWa = primaryContactIsWhatsApp();
 ---
 
-<section id="contato" aria-labelledby="contato-title">
-  <div class="contato reveal" data-gradient-card>
+<section id="contato" class="photo-slat-field" aria-labelledby="contato-title" data-contato-section>
+  <div class="contato reveal" data-gradient-card data-contato-card>
     <div class="contato__copy">
       <p class="eyebrow" style="color: var(--rose-soft)">Contato</p>
       <h2 class="section__title split-headline" id="contato-title" data-split>Vamos conversar sobre o seu cuidado</h2>
@@ -31,6 +33,7 @@ const showWa = primaryContactIsWhatsApp();
           href={site.instagram.url}
           rel="noopener noreferrer"
           target="_blank"
+          data-contato-cta
         >
           <InstagramIcon />
           Instagram {site.instagram.handle}
@@ -39,18 +42,26 @@ const showWa = primaryContactIsWhatsApp();
     </div>
 
     <div class="contato__side">
-      <figure class="contato__photo clip-reveal" data-distort-photo data-rgb-hover data-photo-tilt>
-        <div class="photo-parallax" data-photo-inner>
-          <Portrait
-            src={contatoPhoto}
-            alt="Tuany Eduarda, fisioterapeuta, sorrindo"
-            widths={[280, 420, 640, 900]}
-            sizes="(max-width: 900px) min(88vw, 22rem), min(32vw, 22rem)"
-            loading="lazy"
-            objectPosition="50% 18%"
-            class="contato__img"
-          />
-        </div>
+      <figure class="contato__photo" data-contato-photo data-cta-mask data-photo-tilt>
+        <PhotoStage
+          role="contato"
+          transitionName="photo-contato"
+          href={onContatoPage ? undefined : '/contato/'}
+          cursorLabel="Conversar"
+          slats={9}
+        >
+          <div class="photo-parallax" data-photo-inner>
+            <Portrait
+              src={contatoPhoto}
+              alt="Tuany Eduarda, fisioterapeuta, sorrindo"
+              widths={[280, 420, 640, 900]}
+              sizes="(max-width: 900px) min(88vw, 22rem), min(32vw, 22rem)"
+              loading="lazy"
+              objectPosition="50% 18%"
+              class="contato__img"
+            />
+          </div>
+        </PhotoStage>
         <figcaption class="sr-only">Retrato de {site.name}</figcaption>
       </figure>
       <div class="contato__card">
@@ -129,6 +140,8 @@ const showWa = primaryContactIsWhatsApp();
     border: 1px solid rgba(247, 243, 238, 0.12);
   }
 
+  .contato__photo :global(.photo-stage),
+  .contato__photo :global(.photo-stage__media),
   .contato__photo :global(picture),
   .contato__photo :global(img),
   .photo-parallax {

@@ -1,11 +1,13 @@
 ---
 import { site } from '../config';
 import Portrait from './Portrait.astro';
+import PhotoStage from './PhotoStage.astro';
 import sobrePhoto from '../assets/photos/tuany-sobre.jpg';
+const onSobrePage = Astro.url.pathname.replace(/\/+$/, '').endsWith('/sobre');
 ---
 
-<section class="section" id="sobre" aria-labelledby="sobre-title">
-  <div class="container sobre">
+<section class="section photo-slat-field" id="sobre" aria-labelledby="sobre-title" data-sobre-section data-sobre-mode={onSobrePage ? "page" : "teaser"}>
+  <div class="container sobre" data-sobre-grid>
     <div class="sobre__copy reveal">
       <p class="eyebrow">Sobre a profissional</p>
       <h2 class="section__title split-headline" id="sobre-title" data-split>Cuidado próximo, formação sólida</h2>
@@ -34,6 +36,11 @@ import sobrePhoto from '../assets/photos/tuany-sobre.jpg';
           <dd>Atendimento domiciliar em {site.city}</dd>
         </div>
       </dl>
+      {!onSobrePage && (
+        <p class="sobre__cta-wrap">
+          <a class="btn btn--ghost btn--magnetic" href="/sobre/" data-photo-bridge="sobre">Conhecer a profissional</a>
+        </p>
+      )}
 
       <!-- panel-after-creds -->
       <div class="sobre__panel reveal clip-reveal" aria-label="Resumo profissional">
@@ -62,18 +69,26 @@ import sobrePhoto from '../assets/photos/tuany-sobre.jpg';
     </div>
 
     <aside class="sobre__aside">
-      <figure class="sobre__photo reveal clip-reveal" data-distort-photo data-rgb-hover data-photo-tilt>
-        <div class="photo-parallax" data-photo-inner>
-        <Portrait
-          src={sobrePhoto}
-          alt="Tuany Eduarda, fisioterapeuta, em retrato editorial de corpo inteiro"
-          widths={[320, 480, 640, 800, 1200]}
-          sizes="(max-width: 900px) min(92vw, 28rem), min(36vw, 28rem)"
-          loading="lazy"
-          objectPosition="50% 12%"
-          class="sobre__img"
-        />
-        </div>
+      <figure class="sobre__photo" data-sobre-photo data-photo-tilt>
+        <PhotoStage
+          role="sobre"
+          transitionName="photo-sobre"
+          href={onSobrePage ? undefined : '/sobre/'}
+          cursorLabel="Conhecer"
+          slats={10}
+        >
+          <div class="photo-parallax" data-photo-inner>
+            <Portrait
+              src={sobrePhoto}
+              alt="Tuany Eduarda, fisioterapeuta, em retrato editorial de corpo inteiro"
+              widths={[320, 480, 640, 800, 1200]}
+              sizes="(max-width: 900px) min(92vw, 28rem), min(36vw, 28rem)"
+              loading="lazy"
+              objectPosition="50% 12%"
+              class="sobre__img"
+            />
+          </div>
+        </PhotoStage>
         <figcaption class="sr-only">Retrato profissional de {site.name}</figcaption>
       </figure>
 
@@ -89,6 +104,9 @@ import sobrePhoto from '../assets/photos/tuany-sobre.jpg';
     align-items: start;
   }
 
+  .sobre__cta-wrap {
+    margin-top: var(--space-5);
+  }
   .sobre__text {
     margin-top: var(--space-4);
     color: var(--ink-soft);
@@ -143,6 +161,8 @@ import sobrePhoto from '../assets/photos/tuany-sobre.jpg';
     }
   }
 
+  .sobre__photo :global(.photo-stage),
+  .sobre__photo :global(.photo-stage__media),
   .sobre__photo :global(picture),
   .sobre__photo :global(img) {
     width: 100%;
