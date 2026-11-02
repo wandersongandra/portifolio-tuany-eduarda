@@ -1,5 +1,7 @@
 ---
 import { site } from '../config';
+import Portrait from './Portrait.astro';
+import sobrePhoto from '../assets/photos/tuany-sobre.jpg';
 ---
 
 <section class="section" id="sobre" aria-labelledby="sobre-title">
@@ -34,27 +36,42 @@ import { site } from '../config';
       </dl>
     </div>
 
-    <aside class="sobre__panel reveal clip-reveal" aria-label="Resumo profissional">
-      <div class="sobre__panel-inner">
-        <p class="sobre__panel-label">Em destaque</p>
-        <ul>
-          <li>
-            <strong>Fisioterapia em idosos</strong>
-            <span>Equilíbrio, mobilidade e prevenção de quedas</span>
-          </li>
-          <li>
-            <strong>Atendimento em casa</strong>
-            <span>Conforto e continuidade no dia a dia</span>
-          </li>
-          <li>
-            <strong>DTM e DOF</strong>
-            <span>Cuidado voltado à articulação e dor orofacial</span>
-          </li>
-        </ul>
-        <p class="sobre__note">
-          Atendimento com escuta, presença e plano de cuidado feito sob medida
-          para a sua rotina em Belo Horizonte.
-        </p>
+    <aside class="sobre__aside">
+      <figure class="sobre__photo reveal clip-reveal" data-distort-photo data-rgb-hover>
+        <Portrait
+          src={sobrePhoto}
+          alt="Tuany Eduarda, fisioterapeuta, em retrato editorial de corpo inteiro"
+          widths={[320, 480, 640, 800, 1200]}
+          sizes="(max-width: 900px) min(92vw, 28rem), min(36vw, 28rem)"
+          loading="lazy"
+          objectPosition="50% 12%"
+          class="sobre__img"
+        />
+        <figcaption class="sr-only">Retrato profissional de {site.name}</figcaption>
+      </figure>
+
+      <div class="sobre__panel reveal clip-reveal" aria-label="Resumo profissional">
+        <div class="sobre__panel-inner">
+          <p class="sobre__panel-label">Em destaque</p>
+          <ul>
+            <li>
+              <strong>Fisioterapia em idosos</strong>
+              <span>Equilíbrio, mobilidade e prevenção de quedas</span>
+            </li>
+            <li>
+              <strong>Atendimento em casa</strong>
+              <span>Conforto e continuidade no dia a dia</span>
+            </li>
+            <li>
+              <strong>DTM e DOF</strong>
+              <span>Cuidado voltado à articulação e dor orofacial</span>
+            </li>
+          </ul>
+          <p class="sobre__note">
+            Atendimento com escuta, presença e plano de cuidado feito sob medida
+            para a sua rotina em Belo Horizonte.
+          </p>
+        </div>
       </div>
     </aside>
   </div>
@@ -63,7 +80,7 @@ import { site } from '../config';
 <style>
   .sobre {
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
+    grid-template-columns: 1.15fr 0.85fr;
     gap: clamp(2rem, 5vw, 3.5rem);
     align-items: start;
   }
@@ -95,6 +112,35 @@ import { site } from '../config';
     margin: 0;
     font-weight: 550;
     color: var(--graphite-950);
+  }
+
+  .sobre__aside {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .sobre__photo {
+    margin: 0;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: var(--rose-100);
+    aspect-ratio: 3 / 4;
+    box-shadow: var(--shadow-lift);
+    border: 1px solid var(--line);
+  }
+
+  .sobre__photo :global(picture),
+  .sobre__photo :global(img) {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .sobre__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 12%;
   }
 
   .sobre__panel-inner {
@@ -153,6 +199,11 @@ import { site } from '../config';
   @media (max-width: 900px) {
     .sobre {
       grid-template-columns: 1fr;
+    }
+    .sobre__photo {
+      max-width: 28rem;
+      margin-inline: auto;
+      width: 100%;
     }
   }
 </style>

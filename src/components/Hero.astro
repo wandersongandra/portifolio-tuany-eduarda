@@ -2,6 +2,8 @@
 import { site, whatsappUrl } from '../config';
 import LiquidMesh from './LiquidMesh.astro';
 import WebGLScene from './WebGLScene.astro';
+import Portrait from './Portrait.astro';
+import heroPhoto from '../assets/photos/tuany-hero.jpg';
 const wa = whatsappUrl();
 ---
 
@@ -53,25 +55,21 @@ const wa = whatsappUrl();
       </ul>
     </div>
 
-    <div class="hero__visual" data-hero-visual aria-hidden="true">
+    <div class="hero__visual" data-hero-visual>
       <div class="hero-frame">
         <div class="hero-frame__glow" data-parallax="8"></div>
         <div class="hero-frame__card" data-cursor="Ver">
           <div class="hero-frame__photo clip-reveal" data-distort-photo data-rgb-hover data-shared-hero>
-            <svg viewBox="0 0 320 400" role="img" aria-label="Espaço reservado para foto profissional">
-              <defs>
-                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#E2C4BE"/>
-                  <stop offset="100%" stop-color="#C9978F"/>
-                </linearGradient>
-              </defs>
-              <rect width="320" height="400" rx="28" fill="url(#g1)"/>
-              <circle cx="160" cy="150" r="54" fill="#9E6F68" opacity="0.35"/>
-              <path d="M80 340c20-70 60-100 80-100s60 30 80 100" fill="#9E6F68" opacity="0.28"/>
-              <text x="160" y="372" text-anchor="middle" fill="#58595B" font-family="Source Sans 3, sans-serif" font-size="14" opacity="0.7">
-                Foto profissional
-              </text>
-            </svg>
+            <Portrait
+              src={heroPhoto}
+              alt="Tuany Eduarda, fisioterapeuta, sorrindo"
+              widths={[320, 480, 640, 800, 1200]}
+              sizes="(max-width: 900px) min(88vw, 22rem), 26rem"
+              loading="eager"
+              fetchpriority="high"
+              objectPosition="50% 16%"
+              class="hero-frame__img"
+            />
           </div>
           <div class="hero-frame__chip">
             <span>CREFITO {site.crefito}</span>
@@ -173,6 +171,21 @@ const wa = whatsappUrl();
     border-radius: 1.45rem;
     overflow: hidden;
     background: var(--rose-100);
+    aspect-ratio: 3 / 4;
+  }
+
+  .hero-frame__photo :global(picture),
+  .hero-frame__photo :global(img) {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .hero-frame__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 16%;
   }
 
   .hero-frame__chip {

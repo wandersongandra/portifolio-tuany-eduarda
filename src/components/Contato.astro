@@ -1,5 +1,7 @@
 ---
 import { site, whatsappUrl } from '../config';
+import Portrait from './Portrait.astro';
+import contatoPhoto from '../assets/photos/tuany-contato.jpg';
 const wa = whatsappUrl();
 ---
 
@@ -39,6 +41,19 @@ const wa = whatsappUrl();
       </div>
     </div>
 
+    <div class="contato__side">
+      <figure class="contato__photo reveal clip-reveal" data-distort-photo data-rgb-hover>
+        <Portrait
+          src={contatoPhoto}
+          alt="Tuany Eduarda, fisioterapeuta, sorrindo"
+          widths={[280, 420, 640, 900]}
+          sizes="(max-width: 900px) min(88vw, 22rem), min(32vw, 22rem)"
+          loading="lazy"
+          objectPosition="50% 18%"
+          class="contato__img"
+        />
+        <figcaption class="sr-only">Retrato de {site.name}</figcaption>
+      </figure>
     <div class="contato__card">
       <dl>
         <div>
@@ -71,13 +86,14 @@ const wa = whatsappUrl();
         </div>
       </dl>
     </div>
+    </div>
   </div>
 </section>
 
 <style>
   .contato {
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
+    grid-template-columns: 1.05fr 0.95fr;
     gap: var(--space-6);
     align-items: stretch;
     background: linear-gradient(135deg, #3F4042, #58595B);
@@ -106,6 +122,35 @@ const wa = whatsappUrl();
     margin-bottom: var(--space-5);
     font-size: var(--fs-small);
     color: var(--rose-100);
+  }
+
+
+  .contato__side {
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .contato__photo {
+    margin: 0;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: rgba(255,255,255,0.06);
+    aspect-ratio: 3 / 4;
+    border: 1px solid rgba(247, 243, 238, 0.12);
+  }
+
+  .contato__photo :global(picture),
+  .contato__photo :global(img) {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .contato__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 18%;
   }
 
   .contato__card {
