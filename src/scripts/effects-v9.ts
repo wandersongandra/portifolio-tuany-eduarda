@@ -7,19 +7,76 @@ const reduce = () => window.matchMedia('(prefers-reduced-motion: reduce)').match
 const fine = () => window.matchMedia('(pointer: fine)').matches;
 const mobile = () => window.matchMedia('(max-width: 900px)').matches;
 
-function openSlats(stage: HTMLElement, opts: { delay?: number; stagger?: number; duration?: number } = {}) {
-  const slats = stage.querySelectorAll<HTMLElement>('.photo-stage__slat');
-  if (!slats.length) {
+const MORPH_KEY = 'tuany-photo-morph';
+
+/** Face anchor inside portrait frames (object-position ~16–18% from top). */
+const FACE_AT = '50% 26%';
+
+function consumeMorphArrival(role: string): boolean {
+  try {
+    const v = sessionStorage.getItem(MORPH_KEY);
+    if (v && v === role) {
+      sessionStorage.removeItem(MORPH_KEY);
+      return true;
+    }
+  } catch {
+    /* ignore */
+  }
+  return false;
+}
+
+function markMorphDeparture(role: 'sobre' | 'contato') {
+  try {
+    sessionStorage.setItem(MORPH_KEY, role);
+  } catch {
+    /* ignore */
+  }
+}
+
+/** Fill each blind strip with the portrait image as a background slice. */
+function ensureBlindImages(stage: HTMLElement) {
+  const img =
+    stage.querySelector<HTMLImageElement>('.photo-stage__base img') ||
+    stage.querySelector<HTMLImageElement>('img');
+  if (!img) return;
+  const apply = () => {
+    const src = img.currentSrc || img.src;
+    if (!src) return;
+    const pos = img.style.objectPosition || '50% 18%';
+    stage.querySelectorAll<HTMLElement>('[data-blind-img]').forEach((el) => {
+      el.style.backgroundImage = `url("${src}")`;
+      el.style.backgroundPosition = pos;
+      el.style.backgroundSize = 'cover';
+    });
+  };
+  if (img.complete && (img.currentSrc || img.src)) apply();
+  else img.addEventListener('load', apply, { once: true });
+  // srcset may swap currentSrc shortly after decode
+  window.setTimeout(apply, 120);
+  window.setTimeout(apply, 400);
+}
+
+/**
+ * Image-native blinds: each strip scaleX 0→1 from its center,
+ * revealing the photo beneath — never opaque cream/graphite blocks.
+ */
+function openBlinds(
+  stage: HTMLElement,
+  opts: { delay?: number; stagger?: number; duration?: number; from?: 'center' | 'start' | 'end' | 'random' } = {}
+) {
+  ensureBlindImages(stage);
+  const reveals = stage.querySelectorAll<HTMLElement>('[data-blind-reveal]');
+  if (!reveals.length) {
     stage.classList.add('is-open', 'is-color');
     return null;
   }
-  gsap.set(slats, { scaleY: 1, transformOrigin: '50% 0%' });
-  const tw = gsap.to(slats, {
-    scaleY: 0,
-    duration: opts.duration ?? (mobile() ? 0.55 : 0.85),
+  gsap.set(reveals, { scaleX: 0, transformOrigin: '50% 50%' });
+  const tw = gsap.to(reveals, {
+    scaleX: 1,
+    duration: opts.duration ?? (mobile() ? 0.55 : 0.8),
     stagger: {
-      each: opts.stagger ?? (mobile() ? 0.035 : 0.05),
-      from: 'center',
+      each: opts.stagger ?? (mobile() ? 0.032 : 0.045),
+      from: opts.from ?? 'center',
     },
     ease: 'power3.inOut',
     delay: opts.delay ?? 0,
@@ -27,25 +84,43 @@ function openSlats(stage: HTMLElement, opts: { delay?: number; stagger?: number;
   });
   gsap.to(stage.querySelector('.photo-stage__duotone'), {
     opacity: 0,
-    duration: mobile() ? 0.7 : 1.1,
+    duration: mobile() ? 0.65 : 1.0,
     ease: 'power2.out',
-    delay: (opts.delay ?? 0) + 0.25,
+    delay: (opts.delay ?? 0) + 0.2,
     onComplete: () => stage.classList.add('is-color'),
   });
   return tw;
 }
 
-/** Vertical wood-slat blinds + rose/graphite duotone → natural color. */
+function showFully(stage: HTMLElement | null | undefined) {
+  if (!stage) return;
+  stage.classList.add('is-open', 'is-color');
+  const duo = stage.querySelector<HTMLElement>('.photo-stage__duotone');
+  if (duo) gsap.set(duo, { opacity: 0 });
+  const reveals = stage.querySelectorAll<HTMLElement>('[data-blind-reveal]');
+  if (reveals.length) gsap.set(reveals, { scaleX: 1 });
+}
+
+/** Vertical image blinds + duotone → natural color (scroll-triggered). */
 export function initSlatReveals(cleanups: Clean) {
   document.querySelectorAll<HTMLElement>('[data-photo-stage]').forEach((stage) => {
-    const role = stage.dataset.photoStage;
+    const role = stage.dataset.photoStage || '';
     if (reduce()) {
-      stage.classList.add('is-open', 'is-color');
+      showFully(stage);
       return;
     }
-    // Hero is driven by circle-mask handoff; still finish with slats lightly
+    // Hero: circle-only narrative. Contato invite owns its own reveal.
     if (role === 'hero') return;
+    if (role === 'contato' && stage.closest('[data-cta-mask], [data-contato-photo]')) return;
 
+    // Arrived via shared-element morph — photo already fully visible; skip re-reveal
+    if (consumeMorphArrival(role)) {
+      showFully(stage);
+      stage.classList.add('is-morph-arrived');
+      return;
+    }
+
+    ensureBlindImages(stage);
     const parent = stage.closest('figure, .contato__photo, .sobre__photo') || stage;
     const tw = gsap.timeline({
       scrollTrigger: {
@@ -54,28 +129,36 @@ export function initSlatReveals(cleanups: Clean) {
         once: true,
       },
     });
-    const slats = stage.querySelectorAll<HTMLElement>('.photo-stage__slat');
-    gsap.set(slats, { scaleY: 1, transformOrigin: '50% 0%' });
-    tw.to(slats, {
-      scaleY: 0,
-      duration: mobile() ? 0.55 : 0.9,
-      stagger: { each: mobile() ? 0.03 : 0.048, from: 'random' },
-      ease: 'power3.inOut',
-    }, 0);
-    tw.to(stage.querySelector('.photo-stage__duotone'), {
-      opacity: 0,
-      duration: 1,
-      ease: 'power2.out',
-    }, 0.2);
+    const reveals = stage.querySelectorAll<HTMLElement>('[data-blind-reveal]');
+    gsap.set(reveals, { scaleX: 0, transformOrigin: '50% 50%' });
+    tw.to(
+      reveals,
+      {
+        scaleX: 1,
+        duration: mobile() ? 0.55 : 0.85,
+        stagger: { each: mobile() ? 0.03 : 0.042, from: 'center' },
+        ease: 'power3.inOut',
+      },
+      0
+    );
+    tw.to(
+      stage.querySelector('.photo-stage__duotone'),
+      {
+        opacity: 0,
+        duration: 0.95,
+        ease: 'power2.out',
+      },
+      0.18
+    );
     tw.add(() => stage.classList.add('is-open', 'is-color'));
     cleanups.push(() => tw.kill());
   });
 }
 
 /**
- * Hero: 'a pessoa por trás da marca'
- * Circular mask expands from emblem → portrait, then morphs into the card.
- * Scroll: slow zoom/parallax + badge rotation.
+ * Hero: circle ONLY (no slats). Face-first from emblem/face center.
+ * Scale 1.15→1, duotone→color. Circle expands until the full photo is
+ * visible, then snaps to inset rounded rect (never interpolates circle↔inset).
  */
 export function initHeroPhotoNarrative(cleanups: Clean) {
   const photo = document.querySelector<HTMLElement>('[data-hero-photo]');
@@ -86,38 +169,68 @@ export function initHeroPhotoNarrative(cleanups: Clean) {
 
   if (reduce()) {
     photo.classList.add('is-card');
-    stage?.classList.add('is-open', 'is-color');
+    showFully(stage);
     photo.style.clipPath = 'none';
     return;
   }
 
-  // Start as circle; expand, then ease to rounded rect
-  gsap.set(photo, { clipPath: 'circle(8% at 50% 42%)' });
+  gsap.set(photo, { clipPath: `circle(0% at ${FACE_AT})` });
+  if (inner) gsap.set(inner, { scale: 1.15, transformOrigin: FACE_AT });
   if (stage) {
-    gsap.set(stage.querySelectorAll('.photo-stage__slat'), { scaleY: 1 });
-    gsap.set(stage.querySelector('.photo-stage__duotone'), { opacity: 1 });
+    const duo = stage.querySelector('.photo-stage__duotone');
+    if (duo) gsap.set(duo, { opacity: 1 });
   }
 
   const tl = gsap.timeline({ delay: 0.05 });
-  tl.to(photo, {
-    clipPath: 'circle(72% at 50% 42%)',
-    duration: mobile() ? 0.85 : 1.15,
-    ease: 'power2.inOut',
-  }, 0);
-  if (stage) {
-    tl.add(() => {
-      openSlats(stage, { delay: 0, stagger: 0.04, duration: 0.7 });
-    }, 0.35);
+  // Grow circle — face enters first and stays fully visible inside the circle
+  tl.to(
+    photo,
+    {
+      clipPath: `circle(78% at ${FACE_AT})`,
+      duration: mobile() ? 0.9 : 1.2,
+      ease: 'power2.inOut',
+    },
+    0
+  );
+  if (inner) {
+    tl.to(
+      inner,
+      {
+        scale: 1,
+        duration: mobile() ? 1.0 : 1.3,
+        ease: 'power2.out',
+      },
+      0
+    );
   }
-  tl.to(photo, {
-    clipPath: 'inset(0% 0% 0% 0% round 1.45rem)',
-    duration: mobile() ? 0.7 : 0.95,
-    ease: 'power3.inOut',
-    onComplete: () => photo.classList.add('is-card'),
-  }, 0.85);
+  if (stage) {
+    tl.to(
+      stage.querySelector('.photo-stage__duotone'),
+      {
+        opacity: 0,
+        duration: mobile() ? 0.75 : 1.05,
+        ease: 'power2.out',
+      },
+      0.2
+    );
+  }
+  // Expand past the card so mid-frames never show a sliced face, then snap to inset
+  tl.to(
+    photo,
+    {
+      clipPath: `circle(140% at ${FACE_AT})`,
+      duration: mobile() ? 0.45 : 0.55,
+      ease: 'power2.out',
+      onComplete: () => {
+        gsap.set(photo, { clipPath: 'inset(0% 0% 0% 0% round 1.45rem)' });
+        photo.classList.add('is-card');
+        showFully(stage);
+      },
+    },
+    mobile() ? 0.75 : 0.95
+  );
   cleanups.push(() => tl.kill());
 
-  // Scroll: photo zoom + badge spin (desktop heavier)
   if (inner) {
     const st = ScrollTrigger.create({
       trigger: '.hero',
@@ -151,14 +264,20 @@ export function initSobrePinNarrative(cleanups: Clean) {
   if (!section) return;
   const grid = section.querySelector<HTMLElement>('[data-sobre-grid]');
   const photo = section.querySelector<HTMLElement>('[data-sobre-photo]');
+  const stage = photo?.querySelector<HTMLElement>('[data-photo-stage]');
   const copy = section.querySelector<HTMLElement>('.sobre__copy');
   const items = section.querySelectorAll<HTMLElement>('.sobre__creds > div, .sobre__panel li');
   if (!grid || !photo) return;
 
   section.classList.add('sobre--pin');
 
+  // Morph arrival: show photo fully, skip blinds
+  if (consumeMorphArrival('sobre')) {
+    showFully(stage);
+    stage?.classList.add('is-morph-arrived');
+  }
+
   if (reduce() || mobile()) {
-    // Mobile: lighter — just light up credentials in sequence
     if (reduce()) return;
     const tw = gsap.fromTo(
       items,
@@ -174,7 +293,6 @@ export function initSobrePinNarrative(cleanups: Clean) {
     return;
   }
 
-  // Desktop pin scrub
   gsap.set(photo, {
     width: 'min(72vw, 34rem)',
     maxWidth: '34rem',
@@ -193,13 +311,17 @@ export function initSobrePinNarrative(cleanups: Clean) {
       anticipatePin: 1,
     },
   });
-  tl.to(photo, {
-    width: '100%',
-    maxWidth: '28rem',
-    borderRadius: '1.25rem',
-    ease: 'none',
-    duration: 1,
-  }, 0);
+  tl.to(
+    photo,
+    {
+      width: '100%',
+      maxWidth: '28rem',
+      borderRadius: '1.25rem',
+      ease: 'none',
+      duration: 1,
+    },
+    0
+  );
   if (copy) {
     tl.to(copy, { opacity: 1, y: 0, ease: 'none', duration: 0.55 }, 0.25);
   }
@@ -212,8 +334,8 @@ export function initSobrePinNarrative(cleanups: Clean) {
 }
 
 /**
- * Contato: 'o convite' — smiling photo reveals from the CTA button area;
- * hovering the CTA brightens/zooms the portrait.
+ * Contato: face-first circle reveal (centered on face, not CTA corner).
+ * No opaque overlay blocks. Circle expands past the card then clears.
  */
 export function initContatoInvite(cleanups: Clean) {
   const section = document.querySelector<HTMLElement>('[data-contato-section]');
@@ -225,47 +347,94 @@ export function initContatoInvite(cleanups: Clean) {
 
   if (reduce()) {
     photo.classList.add('is-revealed');
-    stage?.classList.add('is-open', 'is-color');
+    showFully(stage);
     photo.style.clipPath = 'none';
     return;
   }
 
-  // Reveal grows from CTA-ish origin as a circle, then clears to the card radius
-  gsap.set(photo, {
-    clipPath: 'circle(0% at 22% 78%)',
-    opacity: 0.45,
-  });
+  if (consumeMorphArrival('contato')) {
+    photo.classList.add('is-revealed');
+    showFully(stage);
+    stage?.classList.add('is-morph-arrived');
+    gsap.set(photo, { clearProps: 'clipPath', opacity: 1 });
+    return;
+  }
 
-  const st = ScrollTrigger.create({
-    trigger: section,
-    start: 'top 75%',
-    once: true,
-    onEnter: () => {
-      const tl = gsap.timeline();
-      tl.to(photo, {
-        clipPath: 'circle(70% at 40% 55%)',
-        opacity: 1,
-        duration: mobile() ? 0.75 : 1.0,
+  // Face-centered circle — face is the first thing visible
+  gsap.set(photo, {
+    clipPath: `circle(0% at ${FACE_AT})`,
+    opacity: 1,
+  });
+  if (stage) {
+    // Keep base visible under circle (hero-style); hide blinds for this path
+    stage.classList.add('is-open'); // suppress blinds layer
+    const duo = stage.querySelector('.photo-stage__duotone');
+    if (duo) gsap.set(duo, { opacity: 1 });
+  }
+
+  const runInvite = () => {
+    if (photo.dataset.inviteRan === '1') return;
+    photo.dataset.inviteRan = '1';
+    const tl = gsap.timeline();
+    tl.to(
+      photo,
+      {
+        clipPath: `circle(72% at ${FACE_AT})`,
+        duration: mobile() ? 0.8 : 1.05,
         ease: 'power2.inOut',
-      }, 0);
-      tl.to(photo, {
-        clipPath: 'circle(130% at 50% 50%)',
-        duration: 0.55,
+      },
+      0
+    );
+    if (stage) {
+      tl.to(
+        stage.querySelector('.photo-stage__duotone'),
+        { opacity: 0, duration: 0.9, ease: 'power2.out' },
+        0.2
+      );
+    }
+    tl.to(
+      photo,
+      {
+        clipPath: `circle(145% at 50% 40%)`,
+        duration: 0.5,
         ease: 'power2.out',
         onComplete: () => {
           gsap.set(photo, { clearProps: 'clipPath' });
           photo.classList.add('is-revealed');
+          showFully(stage);
         },
-      }, 0.55);
-      if (stage) {
-        tl.add(() => openSlats(stage, { delay: 0, duration: 0.65 }), 0.15);
-      }
-      cleanups.push(() => tl.kill());
-    },
+      },
+      0.7
+    );
+    cleanups.push(() => tl.kill());
+  };
+
+  const st = ScrollTrigger.create({
+    trigger: section,
+    start: 'top 78%',
+    once: true,
+    onEnter: runInvite,
   });
   cleanups.push(() => st.kill());
 
-  // CTA hover ↔ photo response (desktop fine pointer)
+  // IntersectionObserver backup — Lenis/native scroll races can miss ST onEnter
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((e) => e.isIntersecting && e.intersectionRatio > 0.12)) {
+        runInvite();
+        io.disconnect();
+      }
+    },
+    { threshold: [0.12, 0.25], rootMargin: '0px 0px -15% 0px' }
+  );
+  io.observe(section);
+  cleanups.push(() => io.disconnect());
+
+  requestAnimationFrame(() => {
+    const top = section.getBoundingClientRect().top;
+    if (top < window.innerHeight * 0.78) runInvite();
+  });
+
   if (cta && inner && fine() && !mobile()) {
     const enter = () => {
       gsap.to(inner, { scale: 1.08, filter: 'brightness(1.08)', duration: 0.45, ease: 'power2.out' });
@@ -285,8 +454,8 @@ export function initContatoInvite(cleanups: Clean) {
 }
 
 /**
- * Shared-element continuity: nav/bridge links set matching view-transition names
- * so hero/teaser photos travel into destination page photos.
+ * Shared-element continuity + morph-arrival flag so destination skips re-reveal.
+ * Also suppress page-title named transition during photo morph to avoid ghost text.
  */
 export function initPhotoBridges(cleanups: Clean) {
   if (reduce()) return;
@@ -305,18 +474,26 @@ export function initPhotoBridges(cleanups: Clean) {
     const toContato = href.includes('/contato') || bridge === 'contato';
 
     if (toSobre) {
-      // Prefer home sobre teaser; fall back to hero so nav morph still works
+      markMorphDeparture('sobre');
       const src =
         document.querySelector<HTMLElement>('[data-photo-stage="sobre"]') ||
         document.querySelector<HTMLElement>('[data-hero-photo]');
       setName(src, 'photo-sobre');
+      // Avoid competing page-title morph → ghost overlapping headings
+      document.querySelectorAll<HTMLElement>('.page-title, [data-split]').forEach((el) => {
+        el.style.viewTransitionName = 'none';
+      });
       window.setTimeout(() => {
         if (src) src.style.viewTransitionName = '';
       }, 1200);
     }
     if (toContato) {
+      markMorphDeparture('contato');
       const src = document.querySelector<HTMLElement>('[data-photo-stage="contato"]');
       setName(src, 'photo-contato');
+      document.querySelectorAll<HTMLElement>('.page-title, [data-split]').forEach((el) => {
+        el.style.viewTransitionName = 'none';
+      });
       window.setTimeout(() => {
         if (src) src.style.viewTransitionName = '';
       }, 1200);

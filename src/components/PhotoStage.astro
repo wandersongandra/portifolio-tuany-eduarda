@@ -1,7 +1,9 @@
 ---
 /**
- * Narrative photo stage: slat blinds, duotone settle, shared-element name.
- * Does not crop faces — object-position stays on the Portrait.
+ * Narrative photo stage (v9b):
+ * - Hero: no slats — circle mask driven in JS only.
+ * - Sobre/Contato: image-native blinds (each strip reveals the photo via
+ *   scaleX from strip center). Never opaque cream/graphite overlay blocks.
  */
 interface Props {
   role: 'hero' | 'sobre' | 'contato';
@@ -19,41 +21,60 @@ const {
   class: className = '',
   slats = 9,
 } = Astro.props;
+const useBlinds = role !== 'hero';
+const stripCount = Math.max(5, Math.min(14, slats));
 ---
+
 {href ? (
   <a
     class:list={['photo-stage', `photo-stage--${role}`, className]}
     data-photo-stage={role}
-    data-slat-count={slats}
+    data-slat-count={useBlinds ? stripCount : 0}
     href={href}
     data-cursor={cursorLabel || 'Ver'}
     transition:name={transitionName || undefined}
   >
     <div class="photo-stage__media" data-photo-media>
-      <slot />
-      <div class="photo-stage__duotone" data-photo-duotone aria-hidden="true"></div>
-      <div class="photo-stage__slats" data-photo-slats aria-hidden="true">
-        {Array.from({ length: slats }).map((_, i) => (
-          <span class="photo-stage__slat" style={`--si:${i}; --sn:${slats}`}></span>
-        ))}
+      <div class="photo-stage__base" data-photo-base>
+        <slot />
       </div>
+      <div class="photo-stage__duotone" data-photo-duotone aria-hidden="true"></div>
+      {useBlinds && (
+        <div class="photo-stage__blinds" data-photo-blinds aria-hidden="true" style={`--sn:${stripCount}`}>
+          {Array.from({ length: stripCount }).map((_, i) => (
+            <div class="photo-stage__blind" style={`--si:${i}`}>
+              <div class="photo-stage__blind-reveal" data-blind-reveal>
+                <div class="photo-stage__blind-img" data-blind-img></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   </a>
 ) : (
   <div
     class:list={['photo-stage', `photo-stage--${role}`, className]}
     data-photo-stage={role}
-    data-slat-count={slats}
+    data-slat-count={useBlinds ? stripCount : 0}
     transition:name={transitionName || undefined}
   >
     <div class="photo-stage__media" data-photo-media>
-      <slot />
-      <div class="photo-stage__duotone" data-photo-duotone aria-hidden="true"></div>
-      <div class="photo-stage__slats" data-photo-slats aria-hidden="true">
-        {Array.from({ length: slats }).map((_, i) => (
-          <span class="photo-stage__slat" style={`--si:${i}; --sn:${slats}`}></span>
-        ))}
+      <div class="photo-stage__base" data-photo-base>
+        <slot />
       </div>
+      <div class="photo-stage__duotone" data-photo-duotone aria-hidden="true"></div>
+      {useBlinds && (
+        <div class="photo-stage__blinds" data-photo-blinds aria-hidden="true" style={`--sn:${stripCount}`}>
+          {Array.from({ length: stripCount }).map((_, i) => (
+            <div class="photo-stage__blind" style={`--si:${i}`}>
+              <div class="photo-stage__blind-reveal" data-blind-reveal>
+                <div class="photo-stage__blind-img" data-blind-img></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   </div>
 )}
@@ -77,6 +98,20 @@ const {
     overflow: hidden;
     border-radius: inherit;
   }
+  .photo-stage__base {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  /* While blinds animate, hide the full base so only strip windows show photo */
+  .photo-stage:not(.is-open):not(.photo-stage--hero) .photo-stage__base {
+    opacity: 0;
+  }
+  .photo-stage.is-open .photo-stage__base,
+  .photo-stage--hero .photo-stage__base {
+    opacity: 1;
+  }
   .photo-stage__duotone {
     position: absolute;
     inset: 0;
@@ -90,23 +125,48 @@ const {
   .photo-stage.is-color .photo-stage__duotone {
     opacity: 0;
   }
-  .photo-stage__slats {
+  .photo-stage__blinds {
     position: absolute;
     inset: 0;
-    z-index: 3;
+    z-index: 1;
     display: grid;
     grid-template-columns: repeat(var(--sn, 9), 1fr);
     pointer-events: none;
   }
-  .photo-stage__slat {
-    background: var(--cream, #F7F3EE);
-    transform-origin: center top;
+  .photo-stage.is-open .photo-stage__blinds {
+    display: none;
+  }
+  .photo-stage__blind {
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .photo-stage__blind-reveal {
+    position: absolute;
+    inset: 0;
+    transform: scaleX(0);
+    transform-origin: 50% 50%;
+    overflow: hidden;
     will-change: transform;
+  }
+  .photo-stage__blind-img {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    /* Full-stage width so each strip shows the correct slice of the photo */
+    width: calc(var(--sn, 9) * 100%);
+    left: calc(var(--si, 0) * -100%);
+    background-size: cover;
+    background-position: 50% 18%;
+    background-repeat: no-repeat;
   }
   :global(.motion-reduced) .photo-stage__duotone {
     opacity: 0 !important;
   }
-  :global(.motion-reduced) .photo-stage__slats {
+  :global(.motion-reduced) .photo-stage__blinds {
     display: none !important;
+  }
+  :global(.motion-reduced) .photo-stage__base {
+    opacity: 1 !important;
   }
 </style>

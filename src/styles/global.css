@@ -1379,7 +1379,7 @@ html[data-route='contato'] .page-curtain__panel--b { background: #9E6F68; }
 
 /* Hero circle-mask handoff */
 .hero-frame__photo[data-hero-mask] {
-  clip-path: circle(0% at 50% 42%);
+  clip-path: circle(0% at 50% 26%);
 }
 .hero-frame__photo.is-card {
   clip-path: inset(0% 0% 0% 0% round 1.45rem);
@@ -1387,8 +1387,8 @@ html[data-route='contato'] .page-curtain__panel--b { background: #9E6F68; }
 
 /* Contato CTA-linked photo */
 .contato__photo[data-cta-mask] {
-  clip-path: inset(50% 50% 50% 50% round 999px);
-  opacity: 0.35;
+  clip-path: circle(0% at 50% 26%);
+  opacity: 1;
 }
 .contato__photo.is-revealed {
   clip-path: inset(0% 0% 0% 0% round 1.25rem);
@@ -1409,4 +1409,40 @@ html[data-route='contato'] .page-curtain__panel--b { background: #9E6F68; }
     clip-path: none !important;
     opacity: 1 !important;
   }
+}
+
+/* ——— v9b: face-safe reveals + transition hygiene ——— */
+html.is-page-transition .c-cursor {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+::view-transition-old(page-title),
+::view-transition-new(page-title) {
+  animation-duration: 0.3s;
+  animation-timing-function: ease;
+  mix-blend-mode: normal;
+  height: 100%;
+  overflow: hidden;
+}
+/* Prefer root crossfade; avoid ghosted split headings during morph */
+html.is-page-transition .split-headline,
+html.is-page-transition [data-split] {
+  view-transition-name: none !important;
+}
+.site-header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0;
+  right: 0;
+  transform: none !important;
+}
+.photo-stage.is-morph-arrived .photo-stage__blinds {
+  display: none !important;
+}
+.photo-stage.is-morph-arrived .photo-stage__base {
+  opacity: 1 !important;
+}
+.photo-stage.is-morph-arrived .photo-stage__duotone {
+  opacity: 0 !important;
 }

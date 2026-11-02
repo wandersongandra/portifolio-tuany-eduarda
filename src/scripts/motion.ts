@@ -661,6 +661,7 @@ export function bootMotion() {
   let isFirstLoad = true;
 
   document.addEventListener('astro:before-preparation', (ev) => {
+    document.documentElement.classList.add('is-page-transition');
     if (reduceMotion() || isFirstLoad) return;
     const e = ev as unknown as { loader: () => Promise<void> };
     const original = e.loader;
@@ -671,10 +672,12 @@ export function bootMotion() {
   });
 
   document.addEventListener('astro:before-swap', () => {
+    document.documentElement.classList.add('is-page-transition');
     destroyMotion();
   });
 
   document.addEventListener('astro:after-swap', () => {
+    document.documentElement.classList.add('is-page-transition');
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
   });
 
@@ -683,10 +686,12 @@ export function bootMotion() {
       if (isFirstLoad) {
         isFirstLoad = false;
         pageReady = true;
+        document.documentElement.classList.remove('is-page-transition');
         await runPageMotion({ withPreloader: !!document.querySelector('[data-preloader]') });
         return;
       }
       await playCurtainReveal();
+      document.documentElement.classList.remove('is-page-transition');
       await runPageMotion({ withPreloader: false });
     })();
   });

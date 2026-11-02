@@ -74,10 +74,12 @@
     animation: none;
     mix-blend-mode: normal;
   }
+  /* page-title named VT disabled in v9b — caused ghost overlapping headings
+     during photo morphs; curtain + root crossfade handle page changes. */
   .page-title {
-    view-transition-name: page-title;
+    view-transition-name: none;
   }
   [data-shared-hero] {
-    view-transition-name: shared-hero;
+    view-transition-name: none; /* set dynamically by photo bridges when needed */
   }
 </style>
