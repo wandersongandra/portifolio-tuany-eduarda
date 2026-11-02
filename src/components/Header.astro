@@ -1,5 +1,6 @@
 ---
 import { site, whatsappUrl, primaryContactIsWhatsApp, primaryContactLabel } from '../config';
+import InstagramIcon from './InstagramIcon.astro';
 const wa = whatsappUrl();
 const showWa = primaryContactIsWhatsApp();
 const ctaLabel = primaryContactLabel();
@@ -51,7 +52,8 @@ function active(href: string) {
         WhatsApp
       </a>
     ) : (
-      <a class="btn btn--ghost btn--magnetic site-header__cta" href={site.instagram.url} rel="noopener noreferrer" target="_blank">
+      <a class="btn btn--ig btn--magnetic site-header__cta" href={site.instagram.url} rel="noopener noreferrer" target="_blank">
+        <InstagramIcon />
         Instagram
       </a>
     )}
@@ -65,19 +67,23 @@ function active(href: string) {
 <div id="nav-overlay" class="nav-overlay" data-nav-overlay hidden>
   <div class="nav-overlay__bg" aria-hidden="true"></div>
   <nav class="nav-overlay__panel" aria-label="Menu">
-    <button type="button" class="nav-overlay__close" data-nav-close aria-label="Fechar menu">Fechar</button>
-    <ul class="nav-overlay__list">
-      {links.map((l, i) => (
-        <li style={`--i:${i}`}>
-          <a href={l.href} class:list={[{ 'is-active': active(l.href) }]} data-nav-link>{l.label}</a>
-        </li>
-      ))}
-    </ul>
-    {showWa ? (
-      <a class="btn btn--wa" href={wa} data-wa-cta data-nav-link rel="noopener noreferrer" target="_blank">Falar no WhatsApp</a>
-    ) : (
-      <a class="btn btn--primary" href={site.instagram.url} data-nav-link rel="noopener noreferrer" target="_blank">Falar no Instagram</a>
-    )}
+    <div class="nav-overlay__body">
+      <ul class="nav-overlay__list">
+        {links.map((l, i) => (
+          <li style={`--i:${i}`}>
+            <a href={l.href} class:list={[{ 'is-active': active(l.href) }]} data-nav-link>{l.label}</a>
+          </li>
+        ))}
+      </ul>
+      {showWa ? (
+        <a class="btn btn--wa" href={wa} data-wa-cta data-nav-link rel="noopener noreferrer" target="_blank">Falar no WhatsApp</a>
+      ) : (
+        <a class="btn btn--ig" href={site.instagram.url} data-nav-link rel="noopener noreferrer" target="_blank">
+          <InstagramIcon />
+          Falar no Instagram
+        </a>
+      )}
+    </div>
   </nav>
 </div>
 
@@ -155,25 +161,40 @@ function active(href: string) {
     background: var(--paper);
     padding: 0;
     cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
   }
   .nav-toggle span {
     display: block;
     width: 1rem;
     height: 1.5px;
-    margin: 0.28rem auto;
+    margin: 0;
     background: var(--graphite-900);
+    transform-origin: center;
+    transition: transform 0.3s var(--ease);
+  }
+  .nav-toggle.is-open span:nth-child(1) {
+    transform: translateY(3.75px) rotate(45deg);
+  }
+  .nav-toggle.is-open span:nth-child(2) {
+    transform: translateY(-3.75px) rotate(-45deg);
   }
   .nav-overlay {
     position: fixed;
-    inset: 0;
-    z-index: 260;
+    top: var(--header-h, 4.25rem);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 190;
   }
   .nav-overlay[hidden] { display: none !important; }
   .nav-overlay__bg {
     position: absolute;
     inset: 0;
-    background: rgba(46, 47, 49, 0.42);
-    backdrop-filter: blur(10px);
+    background: rgba(46, 47, 49, 0.28);
+    backdrop-filter: blur(8px);
     opacity: 0;
     transition: opacity 0.35s var(--ease);
   }
@@ -183,12 +204,10 @@ function active(href: string) {
     inset: 0;
     width: 100%;
     background: var(--cream);
-    padding: clamp(1.5rem, 5vw, 2.5rem);
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 1.75rem;
-    justify-content: center;
-    transform: translateY(8%);
+    transform: translateY(10px);
     opacity: 0;
     transition: transform 0.45s var(--ease), opacity 0.35s var(--ease);
   }
@@ -196,14 +215,16 @@ function active(href: string) {
     transform: none;
     opacity: 1;
   }
-  .nav-overlay__close {
-    align-self: flex-end;
-    border: 0;
-    background: transparent;
-    font: inherit;
-    color: var(--rose-dark);
-    cursor: pointer;
-    font-weight: 600;
+  .nav-overlay__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.75rem;
+    padding: 1.5rem clamp(1.25rem, 5vw, 2.5rem) 2.5rem;
+    max-width: 28rem;
+    margin-inline: auto;
+    width: 100%;
   }
   .nav-overlay__list {
     display: grid;
@@ -211,7 +232,7 @@ function active(href: string) {
   }
   .nav-overlay__list a {
     font-family: var(--font-display);
-    font-size: clamp(2.2rem, 9vw, 3.4rem);
+    font-size: clamp(2rem, 8.5vw, 3.1rem);
     text-decoration: none;
     color: var(--graphite-950);
     opacity: 0;
@@ -228,10 +249,11 @@ function active(href: string) {
   .nav-overlay__list a.is-active { color: var(--rose-dark); }
   @media (max-width: 900px) {
     .nav, .site-header__cta { display: none; }
-    .nav-toggle { display: inline-grid; place-items: center; }
+    .nav-toggle { display: inline-flex; }
   }
   @media (prefers-reduced-motion: reduce) {
     .nav-overlay__panel { transition: none; }
     .nav-overlay__list a { opacity: 1; transform: none; transition: none; }
+    .nav-toggle span { transition: none; }
   }
 </style>

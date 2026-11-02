@@ -2,6 +2,7 @@
 import { site, whatsappUrl, primaryContactIsWhatsApp } from '../config';
 import Portrait from './Portrait.astro';
 import contatoPhoto from '../assets/photos/tuany-contato.jpg';
+import InstagramIcon from './InstagramIcon.astro';
 const wa = whatsappUrl();
 const showWa = primaryContactIsWhatsApp();
 ---
@@ -26,11 +27,12 @@ const showWa = primaryContactIsWhatsApp();
           </a>
         ) : null}
         <a
-          class:list={['btn', 'btn--magnetic', showWa ? 'btn--light' : 'btn--wa']}
+          class:list={['btn', 'btn--magnetic', showWa ? 'btn--light' : 'btn--ig-on-dark']}
           href={site.instagram.url}
           rel="noopener noreferrer"
           target="_blank"
         >
+          <InstagramIcon />
           Instagram {site.instagram.handle}
         </a>
       </div>

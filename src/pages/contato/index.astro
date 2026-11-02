@@ -11,18 +11,26 @@ import { site } from '../../config';
   canonicalPath="/contato/">
   <Header />
   <main id="conteudo" class="page-main">
-    <header class="page-hero container" data-shared-hero>
-      <p class="eyebrow">Contato</p>
-      <h1 class="page-title section__title" transition:name="page-title" data-flip>Vamos conversar</h1>
+    <header class="page-hero page-hero--contato" data-shared-hero>
+      <div class="container page-hero__intro">
+        <p class="eyebrow">Contato</p>
+        <h1 class="page-title section__title visually-hidden" transition:name="page-title" data-flip>Vamos conversar</h1>
+      </div>
       <div class="contato-kinetic" aria-hidden="true">
         <div class="contato-kinetic__track">
           <span>Vamos conversar</span><span aria-hidden="true">·</span>
           <span>Vamos conversar</span><span aria-hidden="true">·</span>
           <span>Vamos conversar</span><span aria-hidden="true">·</span>
           <span>Vamos conversar</span><span aria-hidden="true">·</span>
+          <span>Vamos conversar</span><span aria-hidden="true">·</span>
+          <span>Vamos conversar</span><span aria-hidden="true">·</span>
+          <span>Vamos conversar</span><span aria-hidden="true">·</span>
+          <span>Vamos conversar</span><span aria-hidden="true">·</span>
         </div>
       </div>
-      <p class="section__lead">Conte o motivo do contato para orientar o primeiro atendimento.</p>
+      <div class="container">
+        <p class="section__lead">Conte o motivo do contato para orientar o primeiro atendimento.</p>
+      </div>
     </header>
     <div class="container section section--tight">
       <Contato />
@@ -32,22 +40,45 @@ import { site } from '../../config';
 </BaseLayout>
 
 <style>
-  .page-hero { padding-block: clamp(2.5rem, 6vw, 4.5rem) 1rem; max-width: 48rem; position: relative; }
+  .page-hero--contato {
+    padding-block: clamp(2.5rem, 6vw, 4.5rem) 1rem;
+    position: relative;
+    overflow-x: clip;
+  }
+  .page-hero__intro {
+    max-width: 48rem;
+  }
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
   .contato-kinetic {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
     overflow: hidden;
     pointer-events: none;
-    margin: 0 0 1rem;
-    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    margin-top: 0.35rem;
+    margin-bottom: 1rem;
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
   }
   .contato-kinetic__track {
     display: flex;
     gap: 1.25rem;
     width: max-content;
     font-family: var(--font-display);
-    font-size: clamp(2.4rem, 8vw, 4.5rem);
+    font-size: clamp(2.6rem, 9vw, 5.25rem);
     line-height: 1;
     color: #8A8B8D;
-    animation: contato-marquee 22s linear infinite;
+    animation: contato-marquee 28s linear infinite;
     white-space: nowrap;
   }
   @keyframes contato-marquee {

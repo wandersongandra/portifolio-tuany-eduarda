@@ -181,18 +181,28 @@ function initHeader() {
 
   const overlay = document.querySelector<HTMLElement>('[data-nav-overlay]');
   const toggle = document.querySelector<HTMLElement>('[data-nav-toggle]');
-  const closeBtn = document.querySelector('[data-nav-close]');
+  const syncHeaderH = () => {
+    const h = header?.offsetHeight || 68;
+    document.documentElement.style.setProperty('--header-h', `${h}px`);
+  };
+  syncHeaderH();
+  on(window, 'resize', syncHeaderH);
   const open = () => {
     if (!overlay || !toggle) return;
+    syncHeaderH();
     overlay.hidden = false;
     requestAnimationFrame(() => overlay.classList.add('is-open'));
+    toggle.classList.add('is-open');
     toggle.setAttribute('aria-expanded', 'true');
+    toggle.setAttribute('aria-label', 'Fechar menu');
     document.body.style.overflow = 'hidden';
   };
   const close = () => {
     if (!overlay || !toggle) return;
     overlay.classList.remove('is-open');
+    toggle.classList.remove('is-open');
     toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Abrir menu');
     document.body.style.overflow = '';
     window.setTimeout(() => { overlay.hidden = true; }, 280);
   };
@@ -200,9 +210,11 @@ function initHeader() {
     if (overlay?.classList.contains('is-open')) close();
     else open();
   });
-  on(closeBtn, 'click', () => close());
   overlay?.querySelectorAll('[data-nav-link]').forEach((a) => on(a, 'click', () => close()));
   on(overlay?.querySelector('.nav-overlay__bg') || null, 'click', () => close());
+  on(document, 'keydown', (e) => {
+    if ((e as KeyboardEvent).key === 'Escape') close();
+  });
 }
 
 function initHero(delay = 0) {

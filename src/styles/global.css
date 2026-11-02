@@ -306,6 +306,27 @@ ol {
   transform: translateY(-1px);
 }
 
+.btn--ig {
+  background: var(--graphite-900);
+  color: var(--cream);
+  box-shadow: 0 8px 20px rgba(46, 47, 49, 0.22);
+}
+.btn--ig:hover {
+  background: var(--rose-dark);
+  color: var(--cream);
+  transform: translateY(-1px);
+}
+.btn--ig-on-dark {
+  background: var(--rose);
+  color: var(--graphite-950);
+  box-shadow: 0 8px 20px rgba(201, 151, 143, 0.28);
+}
+.btn--ig-on-dark:hover {
+  background: var(--rose-soft);
+  color: var(--graphite-950);
+  transform: translateY(-1px);
+}
+
 .btn--ghost {
   background: transparent;
   color: var(--graphite-900);

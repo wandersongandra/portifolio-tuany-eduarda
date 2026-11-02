@@ -4,6 +4,7 @@ import LiquidMesh from './LiquidMesh.astro';
 import WebGLScene from './WebGLScene.astro';
 import Portrait from './Portrait.astro';
 import heroPhoto from '../assets/photos/tuany-hero.jpg';
+import InstagramIcon from './InstagramIcon.astro';
 const wa = whatsappUrl();
 const showWa = primaryContactIsWhatsApp();
 ---
@@ -47,7 +48,8 @@ const showWa = primaryContactIsWhatsApp();
               Agendar pelo WhatsApp
             </a>
           ) : (
-            <a class="btn btn--wa btn--magnetic" href={site.instagram.url} rel="noopener noreferrer" target="_blank">
+            <a class="btn btn--ig btn--magnetic" href={site.instagram.url} rel="noopener noreferrer" target="_blank">
+              <InstagramIcon />
               Agendar pelo Instagram
             </a>
           )}
