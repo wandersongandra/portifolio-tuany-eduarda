@@ -16,7 +16,7 @@ export const services = [
     slug: 'treino-funcional',
     title: 'Treino funcional',
     short: 'Exercícios para força, estabilidade e desempenho nas atividades do dia a dia.',
-    text: 'Programa de exercícios funcionais, individualizado após avaliação, para reforçar força, estabilidade e segurança nos movimentos do cotidiano — sem promessas de resultado.',
+    text: 'Programa de exercícios funcionais, individualizado após avaliação, para reforçar força, estabilidade e segurança nos movimentos do cotidiano.',
     points: [
       'Avaliação e progressão individual',
       'Força e estabilidade',
@@ -51,8 +51,8 @@ export const services = [
   {
     slug: 'tratamento-dtm',
     title: 'Tratamento para DTM',
-    short: 'Disfunção temporomandibular e dor orofacial — frente própria, para adultos.',
-    text: 'Abordagem fisioterapêutica para disfunção temporomandibular (DTM) e dor orofacial, em frente distinta da geriatria. Indicada a adultos após avaliação da articulação, educação e plano individualizado.',
+    short: 'Disfunção temporomandibular e dor orofacial.',
+    text: 'Abordagem fisioterapêutica para disfunção temporomandibular (DTM) e dor orofacial, com avaliação da articulação e plano de tratamento individualizado.',
     points: [
       'Avaliação da articulação temporomandibular',
       'Atenção à dor orofacial',
